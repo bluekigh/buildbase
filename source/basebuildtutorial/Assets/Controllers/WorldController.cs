@@ -9,23 +9,30 @@ using System.Collections;
 
 public class WorldController : MonoBehaviour {
 
+	public static WorldController Instance { get; protected set; }
+
 	// The only tile sprite we have right now, so this
 	// it a pretty simple way to handle it.
 	public Sprite floorSprite;
 
 	// The world and tile data
-	World world;
+	public World World { get; protected set; }
 
 	// Use this for initialization
 	void Start () {
+		if(Instance != null) {
+			Debug.LogError("There should never be two world controllers.");
+		}
+		Instance = this;
+
 		// Create a world with Empty tiles
-		world = new World();
+		World = new World();
 
 		// Create a GameObject for each of our tiles, so they show visually. (and redunt reduntantly)
-		for (int x = 0; x < world.Width; x++) {
-			for (int y = 0; y < world.Height; y++) {
+		for (int x = 0; x < World.Width; x++) {
+			for (int y = 0; y < World.Height; y++) {
 				// Get the tile data
-				Tile tile_data = world.GetTileAt(x, y);
+				Tile tile_data = World.GetTileAt(x, y);
 
 				// This creates a new GameObject and adds it to our scene.
 				GameObject tile_go = new GameObject();
@@ -43,7 +50,7 @@ public class WorldController : MonoBehaviour {
 		}
 
 		// Shake things up, for testing.
-		world.RandomizeTiles();
+		World.RandomizeTiles();
 	}
 
 	// Update is called once per frame
@@ -66,5 +73,18 @@ public class WorldController : MonoBehaviour {
 
 
 	}
+
+	/// <summary>
+	/// Gets the tile at the unity-space coordinates
+	/// </summary>
+	/// <returns>The tile at world coordinate.</returns>
+	/// <param name="coord">Unity World-Space coordinates.</param>
+	public Tile GetTileAtWorldCoord(Vector3 coord) {
+		int x = Mathf.FloorToInt(coord.x);
+		int y = Mathf.FloorToInt(coord.y);
+		
+		return World.GetTileAt(x, y);
+	}
+
 
 }
