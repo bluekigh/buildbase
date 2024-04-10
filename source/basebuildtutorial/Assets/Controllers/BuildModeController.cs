@@ -47,7 +47,7 @@ public class BuildModeController : MonoBehaviour {
 				// This tile position is valid for this furniture
 				// Create a job for it to be build
 
-				Job j = new Job(t, (theJob) => { 
+				Job j = new Job(t, furnitureType, (theJob) => { 
 					WorldController.Instance.world.PlaceFurniture( furnitureType, theJob.tile );
 
 					// FIXME: I don't like having to manually and explicitly set
@@ -56,6 +56,7 @@ public class BuildModeController : MonoBehaviour {
 				}
 				);
 
+
 				// FIXME: I don't like having to manually and explicitly set
 				// flags that preven conflicts. It's too easy to forget to set/clear them!
 				t.pendingFurnitureJob = j;
@@ -63,7 +64,7 @@ public class BuildModeController : MonoBehaviour {
 
 				// Add the job to the queue
 				WorldController.Instance.world.jobQueue.Enqueue( j );
-				Debug.Log("Job Queue Size: " + WorldController.Instance.world.jobQueue.Count);
+
 			}
 
 
