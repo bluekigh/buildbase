@@ -97,10 +97,28 @@ public class Tile {
 
 	// Tells us if two tiles are adjacent.
 	public bool IsNeighbour(Tile tile, bool diagOkay = false) {
-		if(this.X == tile.X && ( this.Y == tile.Y+1 || this.Y == tile.Y-1 ))
+
+
+		// Check to see if we have a difference of exactly ONE between the two
+		// tile coordinates.  Is so, then we are vertical or horizontal neighbours.
+		return 
+			Mathf.Abs( this.X - tile.X ) + Mathf.Abs( this.Y - tile.Y ) == 1 ||  // Check hori/vert adjacency
+			( diagOkay && ( Mathf.Abs( this.X - tile.X ) == 1 && Mathf.Abs( this.Y - tile.Y ) == 1 ) ) // Check diag adjacency
+			;
+
+
+
+
+
+
+
+/*		// First, are we on the same X column?  If so, see if we differ
+		// in our Y by exactly one.
+		if(this.X == tile.X && ( Mathf.Abs( this.Y - tile.Y ) == 1 ) )
 			return true;
 
-		if(this.Y == tile.Y && ( this.X == tile.X+1 || this.X == tile.X-1 ))
+		// Now check on the same Y row...
+		if(this.Y == tile.Y && ( Mathf.Abs( this.X - tile.X ) == 1 ) )
 			return true;
 
 		if(diagOkay) {
@@ -111,6 +129,6 @@ public class Tile {
 		}
 
 		return false;
-	}
+*/	}
 
 }

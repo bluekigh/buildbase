@@ -60,7 +60,14 @@ public class Character {
 		}
 
 		// What's the total distance from point A to point B?
-		float distToTravel = Mathf.Sqrt(Mathf.Pow(currTile.X-destTile.X, 2) + Mathf.Pow(currTile.Y-destTile.Y, 2));
+		// We are going to use Euclidean distance FOR NOW...
+		// But when we do the pathfinding system, we'll likely
+		// switch to something like Manhattan or Chebyshev distance
+		float distToTravel = Mathf.Sqrt(
+			Mathf.Pow(currTile.X-destTile.X, 2) + 
+			Mathf.Pow(currTile.Y-destTile.Y, 2)
+		);
+
 
 		// How much distance can be travel this Update?
 		float distThisFrame = speed * deltaTime;

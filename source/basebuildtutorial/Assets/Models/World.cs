@@ -59,8 +59,6 @@ public class World {
 	}
 
 	public void Update(float deltaTime) {
-		Debug.Log("Update -- deltaTime: " + deltaTime);
-
 		foreach(Character c in characters) {
 			c.Update(deltaTime);
 		}
