@@ -44,7 +44,9 @@ public class TileSpriteController : MonoBehaviour {
 
 				// Add a Sprite Renderer
 				// Add a default sprite for empty tiles.
-				tile_go.AddComponent<SpriteRenderer>().sprite = emptySprite;
+				SpriteRenderer sr = tile_go.AddComponent<SpriteRenderer>();
+				sr.sprite = emptySprite;
+				sr.sortingLayerName = "Tiles";
 
 			}
 		}

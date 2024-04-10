@@ -34,9 +34,9 @@ public class FurnitureSpriteController : MonoBehaviour {
 		furnitureSprites = new Dictionary<string, Sprite>();
 		Sprite[] sprites = Resources.LoadAll<Sprite>("Images/Furniture/");
 
-		Debug.Log("LOADED RESOURCE:");
+		//Debug.Log("LOADED RESOURCE:");
 		foreach(Sprite s in sprites) {
-			Debug.Log(s);
+			//Debug.Log(s);
 			furnitureSprites[s.name] = s;
 		}
 	}
@@ -57,7 +57,9 @@ public class FurnitureSpriteController : MonoBehaviour {
 		furn_go.transform.position = new Vector3( furn.tile.X, furn.tile.Y, 0);
 		furn_go.transform.SetParent(this.transform, true);
 
-		furn_go.AddComponent<SpriteRenderer>().sprite = GetSpriteForFurniture(furn);
+		SpriteRenderer sr = furn_go.AddComponent<SpriteRenderer>();
+		sr.sprite = GetSpriteForFurniture(furn);
+		sr.sortingLayerName = "Furniture";
 
 		// Register our callback so that our GameObject gets updated whenever
 		// the object's into changes.
