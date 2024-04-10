@@ -23,12 +23,20 @@ public class World {
 	Action<Furniture> cbFurnitureCreated;
 	Action<Tile> cbTileChanged;
 
+	// TODO: Most likely this will be replaced with a dedicated
+	// class for managing job queues (plural!) that might also
+	// be semi-static or self initializing or some damn thing.
+	// For now, this is just a PUBLIC member of World
+	public Queue<Job> jobQueue;
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="World"/> class.
 	/// </summary>
 	/// <param name="width">Width in tiles.</param>
 	/// <param name="height">Height in tiles.</param>
 	public World(int width = 100, int height = 100) {
+		jobQueue = new Queue<Job>();
+
 		Width = width;
 		Height = height;
 
@@ -136,5 +144,9 @@ public class World {
 			return;
 		
 		cbTileChanged(t);
+	}
+
+	public bool IsFurniturePlacementValid(string furnitureType, Tile t) {
+		return furniturePrototypes[furnitureType].IsValidPosition(t);
 	}
 }

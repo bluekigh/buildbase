@@ -36,6 +36,10 @@ public class Tile {
 		get; protected set;
 	}
 
+	// FIXME: This seems like a terrible way to flag if a job is pending
+	// on a tile.  This is going to be prone to errors in set/clear.
+	public Job pendingFurnitureJob;
+
 	// We need to know the context in which we exist. Probably. Maybe.
 	public World world { get; protected set; }
 
