@@ -25,8 +25,9 @@ public class CharacterSpriteController : MonoBehaviour {
 
 
 		// DEBUG
-		world.CreateCharacter( world.GetTileAt( world.Width/2, world.Height/2 ) );
+		Character c = world.CreateCharacter( world.GetTileAt( world.Width/2, world.Height/2 ) );
 
+		//c.SetDestination( world.GetTileAt( world.Width/2 + 5, world.Height/2 ) );
 	}
 
 	void LoadSprites() {
@@ -40,7 +41,7 @@ public class CharacterSpriteController : MonoBehaviour {
 		}
 	}
 
-	public void OnCharacterCreated( Character character ) {
+	public void OnCharacterCreated( Character c ) {
 		Debug.Log("OnCharacterCreated");
 		// Create a visual GameObject linked to this data.
 
@@ -50,10 +51,10 @@ public class CharacterSpriteController : MonoBehaviour {
 		GameObject char_go = new GameObject();
 
 		// Add our tile/GO pair to the dictionary.
-		characterGameObjectMap.Add( character, char_go );
+		characterGameObjectMap.Add( c, char_go );
 
 		char_go.name = "Character";
-		char_go.transform.position = new Vector3( character.currTile.X, character.currTile.Y, 0);
+		char_go.transform.position = new Vector3( c.X, c.Y, 0);
 		char_go.transform.SetParent(this.transform, true);
 
 		SpriteRenderer sr = char_go.AddComponent<SpriteRenderer>();
@@ -62,26 +63,28 @@ public class CharacterSpriteController : MonoBehaviour {
 
 		// Register our callback so that our GameObject gets updated whenever
 		// the object's into changes.
-		//char.RegisterOnChangedCallback( OnFurnitureChanged );
+		c.RegisterOnChangedCallback( OnCharacterChanged );
 
 	}
 
-/*	void OnFurnitureChanged( Furniture furn ) {
+	void OnCharacterChanged( Character c ) {
 		//Debug.Log("OnFurnitureChanged");
 		// Make sure the furniture's graphics are correct.
 
-		if(characterGameObjectMap.ContainsKey(furn) == false) {
-			Debug.LogError("OnFurnitureChanged -- trying to change visuals for furniture not in our map.");
+		if(characterGameObjectMap.ContainsKey(c) == false) {
+			Debug.LogError("OnCharacterChanged -- trying to change visuals for character not in our map.");
 			return;
 		}
 
-		GameObject furn_go = characterGameObjectMap[furn];
+		GameObject char_go = characterGameObjectMap[c];
 		//Debug.Log(furn_go);
 		//Debug.Log(furn_go.GetComponent<SpriteRenderer>());
 
-		furn_go.GetComponent<SpriteRenderer>().sprite = GetSpriteForFurniture(furn);
+		//char_go.GetComponent<SpriteRenderer>().sprite = GetSpriteForFurniture(furn);
+
+		char_go.transform.position = new Vector3( c.X, c.Y, 0);
 	}
-*/
+
 
 	
 }
