@@ -26,7 +26,7 @@ public class WorldController : MonoBehaviour {
 	public World World { get; protected set; }
 
 	// Use this for initialization
-	void Start () {
+	void OnEnable () {
 
 		LoadSprites();
 
@@ -64,11 +64,12 @@ public class WorldController : MonoBehaviour {
 				// Add a default sprite for empty tiles.
 				tile_go.AddComponent<SpriteRenderer>().sprite = emptySprite;
 
-				// Register our callback so that our GameObject gets updated whenever
-				// the tile's type changes.
-				tile_data.RegisterTileTypeChangedCallback( OnTileTypeChanged );
 			}
 		}
+
+		// Register our callback so that our GameObject gets updated whenever
+		// the tile's type changes.
+		World.RegisterTileChanged( OnTileChanged );
 
 		// Center the Camera
 		Camera.main.transform.position = new Vector3( World.Width/2, World.Height/2, Camera.main.transform.position.z );
@@ -107,7 +108,7 @@ public class WorldController : MonoBehaviour {
 			tileGameObjectMap.Remove(tile_data);
 
 			// Unregister the callback!
-			tile_data.UnregisterTileTypeChangedCallback( OnTileTypeChanged );
+			tile_data.UnregisterTileTypeChangedCallback( OnTileChanged );
 
 			// Destroy the visual GameObject
 			Destroy( tile_go );
@@ -117,8 +118,8 @@ public class WorldController : MonoBehaviour {
 		// function to build all the GameObjects for the tiles on the new floor/level
 	}
 
-	// This function should be called automatically whenever a tile's type gets changed.
-	void OnTileTypeChanged( Tile tile_data ) {
+	// This function should be called automatically whenever a tile's data gets changed.
+	void OnTileChanged( Tile tile_data ) {
 
 		if(tileGameObjectMap.ContainsKey(tile_data) == false) {
 			Debug.LogError("tileGameObjectMap doesn't contain the tile_data -- did you forget to add the tile to the dictionary? Or maybe forget to unregister a callback?");
