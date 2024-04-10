@@ -31,7 +31,9 @@ public class Tile {
 	LooseObject looseObject;
 
 	// InstalledObject is something like a wall, door, or sofa.
-	InstalledObject installedObject;
+	public InstalledObject installedObject {
+		get; protected set;
+	}
 
 	// We need to know the context in which we exist. Probably. Maybe.
 	World world;

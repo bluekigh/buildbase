@@ -15,16 +15,28 @@ public class WorldController : MonoBehaviour {
 	// The only tile sprite we have right now, so this
 	// it a pretty simple way to handle it.
 	public Sprite floorSprite;	// FIXME!
-	public Sprite wallSprite;	// FIXME!
 
 	Dictionary<Tile, GameObject> tileGameObjectMap;
 	Dictionary<InstalledObject, GameObject> installedObjectGameObjectMap;
+
+	Dictionary<string, Sprite> installedObjectSprites;
 
 	// The world and tile data
 	public World World { get; protected set; }
 
 	// Use this for initialization
 	void Start () {
+
+		installedObjectSprites = new Dictionary<string, Sprite>();
+		Sprite[] sprites = Resources.LoadAll<Sprite>("Images/InstalledObjects/");
+
+		Debug.Log("LOADED RESOURCE:");
+		foreach(Sprite s in sprites) {
+			Debug.Log(s);
+			installedObjectSprites[s.name] = s;
+		}
+
+
 		if(Instance != null) {
 			Debug.LogError("There should never be two world controllers.");
 		}
@@ -155,11 +167,57 @@ public class WorldController : MonoBehaviour {
 
 		// FIXME: We assume that the object must be a wall, so use
 		// the hardcoded reference to the wall sprite.
-		obj_go.AddComponent<SpriteRenderer>().sprite = wallSprite;	// FIXME
+		obj_go.AddComponent<SpriteRenderer>().sprite = GetSpriteForInstalledObject(obj);
 
 		// Register our callback so that our GameObject gets updated whenever
 		// the object's into changes.
 		obj.RegisterOnChangedCallback( OnInstalledObjectChanged );
+
+	}
+
+	Sprite GetSpriteForInstalledObject(InstalledObject obj) {
+		if(obj.linksToNeighbour == false) {
+			return installedObjectSprites[obj.objectType];
+		}
+
+		// Otherwise, the sprite name is more complicated.
+
+		string spriteName = obj.objectType + "_";
+
+		// Check for neighbours North, East, South, West
+
+		int x = obj.tile.X;
+		int y = obj.tile.Y;
+
+		Tile t;
+
+		t = World.GetTileAt(x, y+1);
+		if(t != null && t.installedObject != null && t.installedObject.objectType == obj.objectType) {
+			spriteName += "N";
+		}
+		t = World.GetTileAt(x+1, y);
+		if(t != null && t.installedObject != null && t.installedObject.objectType == obj.objectType) {
+			spriteName += "E";
+		}
+		t = World.GetTileAt(x, y-1);
+		if(t != null && t.installedObject != null && t.installedObject.objectType == obj.objectType) {
+			spriteName += "S";
+		}
+		t = World.GetTileAt(x-1, y);
+		if(t != null && t.installedObject != null && t.installedObject.objectType == obj.objectType) {
+			spriteName += "W";
+		}
+
+		// For example, if this object has all four neighbours of
+		// the same type, then the string will look like:
+		//       Wall_NESW
+
+		if(installedObjectSprites.ContainsKey(spriteName) == false) {
+			Debug.LogError("GetSpriteForInstalledObject -- No sprites with name: " + spriteName);
+			return null;
+		}
+
+		return installedObjectSprites[spriteName];
 
 	}
 
