@@ -5,6 +5,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System;
 
 // InstalledObjects are things like walls, doors, and furniture (e.g. a sofa)
 
@@ -12,10 +13,14 @@ public class InstalledObject {
 
 	// This represents the BASE tile of the object -- but in practice, large objects may actually occupy
 	// multile tiles.
-	Tile tile;	
+	public Tile tile {
+		get; protected set;
+	}
 
 	// This "objectType" will be queried by the visual system to know what sprite to render for this object
-	string objectType;
+	public string objectType {
+		get; protected set;
+	}
 
 	// This is a multipler. So a value of "2" here, means you move twice as slowly (i.e. at half speed)
 	// Tile types and other environmental effects may be combined.
@@ -27,6 +32,8 @@ public class InstalledObject {
 	// For example, a sofa might be 3x2 (actual graphics only appear to cover the 3x1 area, but the extra row is for leg room.)
 	int width;
 	int height;
+
+	Action<InstalledObject> cbOnChanged;
 
 	// TODO: Implement larger objects
 	// TODO: Implement object rotation
@@ -69,6 +76,13 @@ public class InstalledObject {
 		return obj;
 	}
 
+	public void RegisterOnChangedCallback(Action<InstalledObject> callbackFunc) {
+		cbOnChanged += callbackFunc;
+	}
+
+	public void UnregisterOnChangedCallback(Action<InstalledObject> callbackFunc) {
+		cbOnChanged -= callbackFunc;
+	}
 
 
 }
