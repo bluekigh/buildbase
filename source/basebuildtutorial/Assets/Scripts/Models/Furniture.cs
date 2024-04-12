@@ -4,7 +4,7 @@
 //=======================================================================
 
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 using System.Xml;
 using System.Xml.Schema;
@@ -13,6 +13,17 @@ using System.Xml.Serialization;
 // InstalledObjects are things like walls, doors, and furniture (e.g. a sofa)
 
 public class Furniture : IXmlSerializable {
+
+	public Dictionary<string, object> furnParamaters;
+	public Action<Furniture, float> updateActions;
+
+	public void Update(float deltaTime) {
+		if(updateActions != null) {
+			updateActions(this, deltaTime);
+		}
+	}
+
+
 
 	// This represents the BASE tile of the object -- but in practice, large objects may actually occupy
 	// multile tiles.
@@ -47,22 +58,40 @@ public class Furniture : IXmlSerializable {
 	// TODO: Implement larger objects
 	// TODO: Implement object rotation
 
+	// Empty constructor is used for serialization
 	public Furniture() {
-		
+		furnParamaters = new Dictionary<string, object>();
 	}
 
-	static public Furniture CreatePrototype( string objectType, float movementCost = 1f, int width=1, int height=1, bool linksToNeighbour=false ) {
-		Furniture obj = new Furniture();
+	// Copy Constructor
+	protected Furniture( Furniture other ) {
+		this.objectType = other.objectType;
+		this.movementCost = other.movementCost;
+		this.width = other.width;
+		this.height = other.height;
+		this.linksToNeighbour = other.linksToNeighbour;
 
-		obj.objectType = objectType;
-		obj.movementCost = movementCost;
-		obj.width = width;
-		obj.height = height;
-		obj.linksToNeighbour = linksToNeighbour;
+		this.furnParamaters = new Dictionary<string, object>(other.furnParamaters);
 
-		obj.funcPositionValidation = obj.__IsValidPosition;
+		if(other.updateActions != null)
+			this.updateActions = (Action<Furniture, float>)other.updateActions.Clone();
+	}
 
-		return obj;
+	virtual public Furniture Clone(  ) {
+		return new Furniture( this );
+	}
+
+	// Create furniture from parameters -- this will probably ONLY ever be used for prototypes
+	public Furniture ( string objectType, float movementCost = 1f, int width=1, int height=1, bool linksToNeighbour=false ) {
+		this.objectType = objectType;
+		this.movementCost = movementCost;
+		this.width = width;
+		this.height = height;
+		this.linksToNeighbour = linksToNeighbour;
+
+		this.funcPositionValidation = this.__IsValidPosition;
+
+		furnParamaters = new Dictionary<string, object>();
 	}
 
 	static public Furniture PlaceInstance( Furniture proto, Tile tile ) {
@@ -72,16 +101,7 @@ public class Furniture : IXmlSerializable {
 		}
 
 		// We know our placement destination is valid.
-
-
-		Furniture obj = new Furniture();
-
-		obj.objectType = proto.objectType;
-		obj.movementCost = proto.movementCost;
-		obj.width = proto.width;
-		obj.height = proto.height;
-		obj.linksToNeighbour = proto.linksToNeighbour;
-
+		Furniture obj = proto.Clone();
 		obj.tile = tile;
 
 		// FIXME: This assumes we are 1x1!
@@ -181,7 +201,6 @@ public class Furniture : IXmlSerializable {
 
 		movementCost = int.Parse( reader.GetAttribute("movementCost") );
 	}
-
 
 
 }

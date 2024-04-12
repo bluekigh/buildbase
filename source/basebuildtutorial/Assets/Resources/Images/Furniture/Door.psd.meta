@@ -1,10 +1,10 @@
 fileFormatVersion: 2
 guid: 08f3be664581d2c47bf95c35d69a1e91
-timeCreated: 1449593516
+timeCreated: 1457025261
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Door_EW
+    21300000: Door_
     21300002: Door_NS
   serializedVersion: 2
   mipmaps:
@@ -46,13 +46,13 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Door_EW
+    - name: Door_
       rect:
         serializedVersion: 2
         x: 32

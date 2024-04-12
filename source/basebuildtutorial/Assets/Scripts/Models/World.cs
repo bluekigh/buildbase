@@ -95,17 +95,36 @@ public class World : IXmlSerializable {
 	}
 
 	void CreateFurniturePrototypes() {
+		// This will be replaced by a function that reads all of our furniture data
+		// from a text file in the future.
+
 		furniturePrototypes = new Dictionary<string, Furniture>();
 
 		furniturePrototypes.Add("Wall", 
-			Furniture.CreatePrototype(
-								"Wall",
-								0,	// Impassable
-								1,  // Width
-								1,  // Height
-								true // Links to neighbours and "sort of" becomes part of a large object
-							)
+			new Furniture(
+				"Wall",
+				0,	// Impassable
+				1,  // Width
+				1,  // Height
+				true // Links to neighbours and "sort of" becomes part of a large object
+			)
 		);
+
+		furniturePrototypes.Add("Door", 
+			new Furniture(
+				"Door",
+				0,	// Impassable
+				1,  // Width
+				1,  // Height
+				true // Links to neighbours and "sort of" becomes part of a large object
+			)
+		);
+
+		// What if the object behaviours were scriptable? And therefore were part of the text file
+		// we are reading in now?
+
+		furniturePrototypes["Door"].furnParamaters["openess"] = 0;
+		furniturePrototypes["Door"].updateActions += FurnitureActions.Door_UpdateAction;
 	}
 
 	/// <summary>
