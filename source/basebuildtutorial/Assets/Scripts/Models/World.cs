@@ -43,6 +43,10 @@ public class World : IXmlSerializable {
 	/// <param name="width">Width in tiles.</param>
 	/// <param name="height">Height in tiles.</param>
 	public World(int width, int height) {
+		SetupWorld(width, height);
+	}
+
+	void SetupWorld(int width, int height) {
 		jobQueue = new JobQueue();
 
 		Width = width;
@@ -62,6 +66,7 @@ public class World : IXmlSerializable {
 		CreateFurniturePrototypes();
 
 		characters = new List<Character>();
+
 	}
 
 	public void Update(float deltaTime) {
@@ -250,6 +255,16 @@ public class World : IXmlSerializable {
 		writer.WriteAttributeString( "Width", Width.ToString() );
 		writer.WriteAttributeString( "Height", Height.ToString() );
 
+		writer.WriteStartElement("Tiles");
+		for (int x = 0; x < Width; x++) {
+			for (int y = 0; y < Height; y++) {
+				writer.WriteStartElement("Tile");
+				tiles[x,y].WriteXml(writer);
+				writer.WriteEndElement();
+			}
+		}
+		writer.WriteEndElement();
+
 /*		writer.WriteStartElement("Width");
 		writer.WriteValue(Width);
 		writer.WriteEndElement();
@@ -259,6 +274,35 @@ public class World : IXmlSerializable {
 	}
 
 	public void ReadXml(XmlReader reader) {
+		Debug.Log("World::ReadXml");
 		// Load info here
+
+		reader.MoveToAttribute("Width");
+		Width = reader.ReadContentAsInt();
+		reader.MoveToAttribute("Height");
+		Height = reader.ReadContentAsInt();
+		reader.MoveToElement();
+
+		SetupWorld(Width, Height);
+
+		reader.ReadToDescendant("Tiles");
+		reader.ReadToDescendant("Tile");
+		Debug.Log(reader.Name);
+		while(reader.IsStartElement("Tile")) {
+
+			reader.MoveToAttribute("X");
+			int x = reader.ReadContentAsInt();
+			reader.MoveToAttribute("Y");
+			int y = reader.ReadContentAsInt();
+
+			//Debug.Log("Reading tile:" + x + ", " + y);
+
+			tiles[x,y].ReadXml(reader);
+
+			reader.ReadToNextSibling("Tile");
+
+			break;
+		}
+
 	}
 }
