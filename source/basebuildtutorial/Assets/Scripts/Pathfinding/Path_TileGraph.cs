@@ -13,7 +13,7 @@ public class Path_TileGraph {
 	// of our world.  Each tile is a node. Each WALKABLE neighbour
 	// from a tile is linked via an edge connection.
 
-	Dictionary<Tile, Path_Node<Tile>> nodes;
+	public Dictionary<Tile, Path_Node<Tile>> nodes;
 
 	public Path_TileGraph(World world) {
 
