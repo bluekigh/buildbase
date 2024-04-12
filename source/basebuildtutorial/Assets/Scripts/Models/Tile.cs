@@ -118,6 +118,11 @@ public class Tile {
 			;
 	}
 
+	/// <summary>
+	/// Gets the neighbours.
+	/// </summary>
+	/// <returns>The neighbours.</returns>
+	/// <param name="diagOkay">Is diagonal movement okay?.</param>
 	public Tile[] GetNeighbours(bool diagOkay = false) {
 		Tile[] ns;
 
