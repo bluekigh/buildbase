@@ -6,8 +6,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
-public class World {
+public class World : IXmlSerializable {
 
 	// A two-dimensional array to hold our tile data.
 	Tile[,] tiles;
@@ -39,7 +42,7 @@ public class World {
 	/// </summary>
 	/// <param name="width">Width in tiles.</param>
 	/// <param name="height">Height in tiles.</param>
-	public World(int width = 100, int height = 100) {
+	public World(int width, int height) {
 		jobQueue = new JobQueue();
 
 		Width = width;
@@ -226,5 +229,36 @@ public class World {
 		}
 
 		return furniturePrototypes[objectType];
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////
+	/// 
+	/// 						SAVING & LOADING
+	/// 
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	public World() {
+		
+	}
+
+	public XmlSchema GetSchema() {
+		return null;
+	}
+
+	public void WriteXml(XmlWriter writer) {
+		// Save info here
+		writer.WriteAttributeString( "Width", Width.ToString() );
+		writer.WriteAttributeString( "Height", Height.ToString() );
+
+/*		writer.WriteStartElement("Width");
+		writer.WriteValue(Width);
+		writer.WriteEndElement();
+*/
+	
+	
+	}
+
+	public void ReadXml(XmlReader reader) {
+		// Load info here
 	}
 }

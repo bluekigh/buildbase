@@ -7,6 +7,9 @@ using System;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using System.Xml.Serialization;
+using System.IO;
 
 public class WorldController : MonoBehaviour {
 
@@ -15,6 +18,8 @@ public class WorldController : MonoBehaviour {
 	// The world and tile data
 	public World world { get; protected set; }
 
+	static bool loadWorld = false;
+
 	// Use this for initialization
 	void OnEnable () {
 		if(Instance != null) {
@@ -22,11 +27,13 @@ public class WorldController : MonoBehaviour {
 		}
 		Instance = this;
 
-		// Create a world with Empty tiles
-		world = new World();
-
-		// Center the Camera
-		Camera.main.transform.position = new Vector3( world.Width/2, world.Height/2, Camera.main.transform.position.z );
+		if(loadWorld) {
+			loadWorld = false;
+			CreateWorldFromSaveFile();
+		}
+		else {
+			CreateEmptyWorld();
+		}
 	}
 
 	void Update() {
@@ -45,6 +52,52 @@ public class WorldController : MonoBehaviour {
 		int y = Mathf.FloorToInt(coord.y);
 		
 		return world.GetTileAt(x, y);
+	}
+
+	public void NewWorld() {
+		Debug.Log("NewWorld button was clicked.");
+
+		SceneManager.LoadScene( SceneManager.GetActiveScene().name );
+	}
+
+	public void SaveWorld() {
+		Debug.Log("SaveWorld button was clicked.");
+
+		XmlSerializer serializer = new XmlSerializer( typeof(World) );
+		TextWriter writer = new StringWriter();
+		serializer.Serialize(writer, world);
+		writer.Close();
+
+		Debug.Log( writer.ToString() );
+
+	}
+
+	public void LoadWorld() {
+		Debug.Log("LoadWorld button was clicked.");
+
+		// Reload the scene to reset all data (and purge old references)
+		loadWorld = true;
+		SceneManager.LoadScene( SceneManager.GetActiveScene().name );
+
+	}
+
+	void CreateEmptyWorld() {
+		// Create a world with Empty tiles
+		world = new World(100, 100);
+
+		// Center the Camera
+		Camera.main.transform.position = new Vector3( world.Width/2, world.Height/2, Camera.main.transform.position.z );
+
+	}
+
+	void CreateWorldFromSaveFile() {
+		Debug.Log("CreateWorldFromSaveFile");
+		// Create a world with Empty tiles
+		world = new World();
+
+		// Center the Camera
+		Camera.main.transform.position = new Vector3( world.Width/2, world.Height/2, Camera.main.transform.position.z );
+
 	}
 
 }
