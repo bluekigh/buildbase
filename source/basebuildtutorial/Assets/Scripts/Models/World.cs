@@ -80,6 +80,10 @@ public class World : IXmlSerializable {
 			c.Update(deltaTime);
 		}
 
+		foreach(Furniture f in furnitures) {
+			f.Update(deltaTime);
+		}
+
 	}
 
 	public Character CreateCharacter( Tile t ) {
@@ -113,10 +117,10 @@ public class World : IXmlSerializable {
 		furniturePrototypes.Add("Door", 
 			new Furniture(
 				"Door",
-				0,	// Impassable
+				1,	
 				1,  // Width
 				1,  // Height
-				true // Links to neighbours and "sort of" becomes part of a large object
+				false // Links to neighbours and "sort of" becomes part of a large object
 			)
 		);
 
@@ -351,43 +355,45 @@ public class World : IXmlSerializable {
 		Debug.Log("ReadXml_Tiles");
 		// We are in the "Tiles" element, so read elements until
 		// we run out of "Tile" nodes.
-		while(reader.Read()) {
-			if(reader.Name != "Tile")
-				return;	// We are out of tiles.
 
-			int x = int.Parse( reader.GetAttribute("X") );
-			int y = int.Parse( reader.GetAttribute("Y") );
-			tiles[x,y].ReadXml(reader);
+		if( reader.ReadToDescendant("Tile") ) {
+			// We have at least one tile, so do something with it.
+
+			do {
+				int x = int.Parse( reader.GetAttribute("X") );
+				int y = int.Parse( reader.GetAttribute("Y") );
+				tiles[x,y].ReadXml(reader);
+			} while ( reader.ReadToNextSibling("Tile") );
+
 		}
 
 	}
 
 	void ReadXml_Furnitures(XmlReader reader) {
 		Debug.Log("ReadXml_Furnitures");
-		while(reader.Read()) {
-			if(reader.Name != "Furniture")
-				return;
 
-			int x = int.Parse( reader.GetAttribute("X") );
-			int y = int.Parse( reader.GetAttribute("Y") );
+		if(reader.ReadToDescendant("Furniture")) {
+			do {
+				int x = int.Parse( reader.GetAttribute("X") );
+				int y = int.Parse( reader.GetAttribute("Y") );
 
-			Furniture furn = PlaceFurniture( reader.GetAttribute("objectType"), tiles[x,y] );
-			furn.ReadXml(reader);
+				Furniture furn = PlaceFurniture( reader.GetAttribute("objectType"), tiles[x,y] );
+				furn.ReadXml(reader);
+			} while (reader.ReadToNextSibling("Furniture"));
 		}
 
 	}
 
 	void ReadXml_Characters(XmlReader reader) {
 		Debug.Log("ReadXml_Characters");
-		while(reader.Read()) {
-			if(reader.Name != "Character")
-				return;
+		if(reader.ReadToDescendant("Character") ) {
+			do {
+				int x = int.Parse( reader.GetAttribute("X") );
+				int y = int.Parse( reader.GetAttribute("Y") );
 
-			int x = int.Parse( reader.GetAttribute("X") );
-			int y = int.Parse( reader.GetAttribute("Y") );
-
-			Character c = CreateCharacter( tiles[x,y] );
-			c.ReadXml(reader);
+				Character c = CreateCharacter( tiles[x,y] );
+				c.ReadXml(reader);
+			} while( reader.ReadToNextSibling("Character") );
 		}
 
 	}

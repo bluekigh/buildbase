@@ -1,10 +1,10 @@
 fileFormatVersion: 2
 guid: 08f3be664581d2c47bf95c35d69a1e91
-timeCreated: 1457025261
+timeCreated: 1457128057
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Door_
+    21300000: Door
     21300002: Door_NS
   serializedVersion: 2
   mipmaps:
@@ -52,7 +52,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Door_
+    - name: Door
       rect:
         serializedVersion: 2
         x: 32
