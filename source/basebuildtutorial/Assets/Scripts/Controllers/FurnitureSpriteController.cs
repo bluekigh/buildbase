@@ -28,6 +28,11 @@ public class FurnitureSpriteController : MonoBehaviour {
 		// Register our callback so that our GameObject gets updated whenever
 		// the tile's type changes.
 		world.RegisterFurnitureCreated(OnFurnitureCreated);
+
+		// Go through any EXISTING furniture (i.e. from a save that was loaded OnEnable) and call the OnCreated event manually
+		foreach(Furniture furn in world.furnitures) {
+			OnFurnitureCreated(furn);
+		}
 	}
 
 	void LoadSprites() {

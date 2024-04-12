@@ -22,10 +22,11 @@ public class CharacterSpriteController : MonoBehaviour {
 		// the tile's type changes.
 		world.RegisterCharacterCreated(OnCharacterCreated);
 
+		// Check for pre-existing characters, which won't do the callback.
+		foreach(Character c in world.characters) {
+			OnCharacterCreated(c);
+		}
 
-
-		// DEBUG
-		Character c = world.CreateCharacter( world.GetTileAt( world.Width/2, world.Height/2 ) );
 
 		//c.SetDestination( world.GetTileAt( world.Width/2 + 5, world.Height/2 ) );
 	}
