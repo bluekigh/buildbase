@@ -110,38 +110,47 @@ public class Tile {
 
 	// Tells us if two tiles are adjacent.
 	public bool IsNeighbour(Tile tile, bool diagOkay = false) {
-
-
 		// Check to see if we have a difference of exactly ONE between the two
 		// tile coordinates.  Is so, then we are vertical or horizontal neighbours.
 		return 
 			Mathf.Abs( this.X - tile.X ) + Mathf.Abs( this.Y - tile.Y ) == 1 ||  // Check hori/vert adjacency
 			( diagOkay && ( Mathf.Abs( this.X - tile.X ) == 1 && Mathf.Abs( this.Y - tile.Y ) == 1 ) ) // Check diag adjacency
 			;
+	}
 
+	public Tile[] GetNeighbours(bool diagOkay = false) {
+		Tile[] ns;
 
-
-
-
-
-
-/*		// First, are we on the same X column?  If so, see if we differ
-		// in our Y by exactly one.
-		if(this.X == tile.X && ( Mathf.Abs( this.Y - tile.Y ) == 1 ) )
-			return true;
-
-		// Now check on the same Y row...
-		if(this.Y == tile.Y && ( Mathf.Abs( this.X - tile.X ) == 1 ) )
-			return true;
-
-		if(diagOkay) {
-			if(this.X == tile.X+1 && (this.Y == tile.Y+1 || this.Y == tile.Y-1 ))
-				return true;
-			if(this.X == tile.X-1 && (this.Y == tile.Y+1 || this.Y == tile.Y-1 ))
-				return true;
+		if(diagOkay == false) {
+			ns = new Tile[4];	// Tile order: N E S W
+		}
+		else {
+			ns = new Tile[8];	// Tile order : N E S W NE SE SW NW
 		}
 
-		return false;
-*/	}
+		Tile n;
+
+		n = world.GetTileAt(X, Y+1);
+		ns[0] = n;	// Could be null, but that's okay.
+		n = world.GetTileAt(X+1, Y);
+		ns[1] = n;	// Could be null, but that's okay.
+		n = world.GetTileAt(X, Y-1);
+		ns[2] = n;	// Could be null, but that's okay.
+		n = world.GetTileAt(X-1, Y);
+		ns[3] = n;	// Could be null, but that's okay.
+
+		if(diagOkay == true) {
+			n = world.GetTileAt(X+1, Y+1);
+			ns[4] = n;	// Could be null, but that's okay.
+			n = world.GetTileAt(X+1, Y-1);
+			ns[5] = n;	// Could be null, but that's okay.
+			n = world.GetTileAt(X-1, Y-1);
+			ns[6] = n;	// Could be null, but that's okay.
+			n = world.GetTileAt(X-1, Y+1);
+			ns[7] = n;	// Could be null, but that's okay.
+		}
+
+		return ns;
+	}
 
 }

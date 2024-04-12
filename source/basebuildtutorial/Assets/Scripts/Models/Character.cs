@@ -80,6 +80,11 @@ public class Character {
 
 		if(movementPercentage >= 1) {
 			// We have reached our destination
+
+			// TODO: Get the next tile from the pathfinding system.
+			//       If there are no more tiles, then we have TRULY
+			//       reached our destination.
+
 			currTile = destTile;
 			movementPercentage = 0;
 			// FIXME?  Do we actually want to retain any overshot movement?

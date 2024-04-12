@@ -13,6 +13,9 @@ public class World {
 	Tile[,] tiles;
 	List<Character> characters;
 
+	// The pathfinding graph used to navigate our world map.
+	Path_TileGraph tileGraph;
+
 	Dictionary<string, Furniture> furniturePrototypes;
 
 	// The tile width of the world.
@@ -168,6 +171,7 @@ public class World {
 
 		if(cbFurnitureCreated != null) {
 			cbFurnitureCreated(obj);
+			InvalidateTileGraph();
 		}
 	}
 
@@ -195,11 +199,20 @@ public class World {
 		cbTileChanged -= callbackfunc;
 	}
 
+	// Gets called whenever ANY tile changes
 	void OnTileChanged(Tile t) {
 		if(cbTileChanged == null)
 			return;
 		
 		cbTileChanged(t);
+
+		InvalidateTileGraph();
+	}
+
+	// This should be called whenever a change to the world
+	// means that our old pathfinding info is invalid.
+	public void InvalidateTileGraph() {
+		tileGraph = null;
 	}
 
 	public bool IsFurniturePlacementValid(string furnitureType, Tile t) {
