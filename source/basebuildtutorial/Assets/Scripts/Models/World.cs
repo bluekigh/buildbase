@@ -16,6 +16,7 @@ public class World : IXmlSerializable {
 	Tile[,] tiles;
 	public List<Character> characters;
 	public List<Furniture> furnitures;
+	public List<Room>      rooms;
 
 	// The pathfinding graph used to navigate our world map.
 	public Path_TileGraph tileGraph;
@@ -51,6 +52,20 @@ public class World : IXmlSerializable {
 		Character c = CreateCharacter( GetTileAt( Width/2, Height/2 ) );
 	}
 
+	public Room GetOutsideRoom() {
+		return rooms[0];
+	}
+
+	public void DeleteRoom(Room r) {
+		if(r == GetOutsideRoom() ) {
+			Debug.LogError("Tried to delete the outside room.");
+			return;
+		}
+
+		r.UnAssignAllTiles();
+		rooms.Remove(r);
+	}
+
 	void SetupWorld(int width, int height) {
 		jobQueue = new JobQueue();
 
@@ -59,10 +74,14 @@ public class World : IXmlSerializable {
 
 		tiles = new Tile[Width,Height];
 
+		rooms = new List<Room>();
+		rooms.Add( new Room() ); // Create the outside?
+
 		for (int x = 0; x < Width; x++) {
 			for (int y = 0; y < Height; y++) {
 				tiles[x,y] = new Tile(this, x, y);
 				tiles[x,y].RegisterTileTypeChangedCallback( OnTileChanged );
+				tiles[x,y].room = GetOutsideRoom(); // Rooms 0 is always going to be outside, and that is our default room
 			}
 		}
 
@@ -110,7 +129,8 @@ public class World : IXmlSerializable {
 				0,	// Impassable
 				1,  // Width
 				1,  // Height
-				true // Links to neighbours and "sort of" becomes part of a large object
+				true, // Links to neighbours and "sort of" becomes part of a large object
+				true  // Enclose rooms
 			)
 		);
 
@@ -120,7 +140,8 @@ public class World : IXmlSerializable {
 				1,	// Door pathfinding cost
 				1,  // Width
 				1,  // Height
-				false // Links to neighbours and "sort of" becomes part of a large object
+				false, // Links to neighbours and "sort of" becomes part of a large object
+				true  // Enclose rooms
 			)
 		);
 
@@ -212,9 +233,21 @@ public class World : IXmlSerializable {
 
 		furnitures.Add(furn);
 
+		// Do we need to recalculate our rooms?
+		if(furn.roomEnclosure) {
+			Room.DoRoomFloodFill(furn);
+		}
+
 		if(cbFurnitureCreated != null) {
 			cbFurnitureCreated(furn);
-			InvalidateTileGraph();
+
+			if(furn.movementCost != 1) {
+				// Since tiles return movement cost as their base cost multiplied
+				// buy the furniture's movement cost, a furniture movement cost
+				// of exactly 1 doesn't impact our pathfinding system, so we can
+				// occasionally avoid invalidating pathfinding graphs
+				InvalidateTileGraph();	// Reset the pathfinding system
+			}
 		}
 
 		return furn;

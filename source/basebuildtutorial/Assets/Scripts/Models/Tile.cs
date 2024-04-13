@@ -37,6 +37,8 @@ public class Tile :IXmlSerializable {
 	// LooseObject is something like a drill or a stack of metal sitting on the floor
 	Inventory inventory;
 
+	public Room room;
+
 	// Furniture is something like a wall, door, or sofa.
 	public Furniture furniture {
 		get; protected set;
