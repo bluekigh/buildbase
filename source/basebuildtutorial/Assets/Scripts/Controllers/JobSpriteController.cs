@@ -44,6 +44,23 @@ public class JobSpriteController : MonoBehaviour {
 		sr.color = new Color( 0.5f, 1f, 0.5f, 0.25f );
 		sr.sortingLayerName = "Jobs";
 
+		// FIXME: This hardcoding is not ideal!
+		if(job.jobObjectType == "Door") {
+			// By default, the door graphic is meant for walls to the east & west
+			// Check to see if we actually have a wall north/south, and if so
+			// then rotate this GO by 90 degrees
+
+			Tile northTile = job.tile.world.GetTileAt( job.tile.X, job.tile.Y + 1 );
+			Tile southTile = job.tile.world.GetTileAt( job.tile.X, job.tile.Y - 1 );
+
+			if(northTile != null && southTile != null && northTile.furniture != null && southTile.furniture != null &&
+				northTile.furniture.objectType=="Wall" && southTile.furniture.objectType=="Wall") {
+				job_go.transform.rotation = Quaternion.Euler( 0, 0, 90 );
+				job_go.transform.Translate( 1f, 0, 0, Space.World );	// UGLY HACK TO COMPENSATE FOR BOTTOM_LEFT ANCHOR POINT!
+			}
+		}
+
+
 		job.RegisterJobCompleteCallback(OnJobEnded);
 		job.RegisterJobCancelCallback(OnJobEnded);
 	}

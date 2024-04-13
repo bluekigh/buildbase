@@ -62,6 +62,24 @@ public class FurnitureSpriteController : MonoBehaviour {
 		furn_go.transform.position = new Vector3( furn.tile.X, furn.tile.Y, 0);
 		furn_go.transform.SetParent(this.transform, true);
 
+		// FIXME: This hardcoding is not ideal!
+		if(furn.objectType == "Door") {
+			// By default, the door graphic is meant for walls to the east & west
+			// Check to see if we actually have a wall north/south, and if so
+			// then rotate this GO by 90 degrees
+
+			Tile northTile = world.GetTileAt( furn.tile.X, furn.tile.Y + 1 );
+			Tile southTile = world.GetTileAt( furn.tile.X, furn.tile.Y - 1 );
+
+			if(northTile != null && southTile != null && northTile.furniture != null && southTile.furniture != null &&
+				northTile.furniture.objectType=="Wall" && southTile.furniture.objectType=="Wall") {
+				furn_go.transform.rotation = Quaternion.Euler( 0, 0, 90 );
+				furn_go.transform.Translate( 1f, 0, 0, Space.World );	// UGLY HACK TO COMPENSATE FOR BOTTOM_LEFT ANCHOR POINT!
+			}
+		}
+
+
+
 		SpriteRenderer sr = furn_go.AddComponent<SpriteRenderer>();
 		sr.sprite = GetSpriteForFurniture(furn);
 		sr.sortingLayerName = "Furniture";
@@ -86,41 +104,69 @@ public class FurnitureSpriteController : MonoBehaviour {
 		//Debug.Log(furn_go.GetComponent<SpriteRenderer>());
 
 		furn_go.GetComponent<SpriteRenderer>().sprite = GetSpriteForFurniture(furn);
+
 	}
 
 
 
 
-	public Sprite GetSpriteForFurniture(Furniture obj) {
-		if(obj.linksToNeighbour == false) {
-			return furnitureSprites[obj.objectType];
+	public Sprite GetSpriteForFurniture(Furniture furn) {
+		string spriteName = furn.objectType;
+
+		if(furn.linksToNeighbour == false) {
+
+			// If this is a DOOR, let's check OPENNESS and update the sprite.
+			// FIXME: All this hardcoding needs to be generalized later.
+			if(furn.objectType == "Door") {
+				if(furn.furnParameters["openness"] < 0.1f ) {
+					// Door is closed
+					spriteName = "Door";
+				}
+				else if(furn.furnParameters["openness"] < 0.5f ) {
+					// Door is a bit open
+					spriteName = "Door_openness_1";
+				}
+				else if(furn.furnParameters["openness"] < 0.9f ) {
+					// Door is a lot open
+					spriteName = "Door_openness_2";
+				}
+				else {
+					// Door is a fully open
+					spriteName = "Door_openness_3";
+				}
+				//Debug.Log(spriteName);
+			}
+
+
+
+			return furnitureSprites[spriteName];
 		}
 
 		// Otherwise, the sprite name is more complicated.
 
-		string spriteName = obj.objectType + "_";
+		spriteName = furn.objectType + "_";
 
 		// Check for neighbours North, East, South, West
 
-		int x = obj.tile.X;
-		int y = obj.tile.Y;
+		int x = furn.tile.X;
+		int y = furn.tile.Y;
 
 		Tile t;
 
 		t = world.GetTileAt(x, y+1);
-		if(t != null && t.furniture != null && t.furniture.objectType == obj.objectType) {
+		if(t != null && t.furniture != null && t.furniture.objectType == furn.objectType) {
 			spriteName += "N";
 		}
 		t = world.GetTileAt(x+1, y);
-		if(t != null && t.furniture != null && t.furniture.objectType == obj.objectType) {
+		if(t != null && t.furniture != null && t.furniture.objectType == furn.objectType) {
 			spriteName += "E";
 		}
 		t = world.GetTileAt(x, y-1);
-		if(t != null && t.furniture != null && t.furniture.objectType == obj.objectType) {
+		if(t != null && t.furniture != null && t.furniture.objectType == furn.objectType) {
 			spriteName += "S";
 		}
 		t = world.GetTileAt(x-1, y);
-		if(t != null && t.furniture != null && t.furniture.objectType == obj.objectType) {
+		if(t != null && t.furniture != null && t.furniture.objectType == furn.objectType) {
 			spriteName += "W";
 		}
 
@@ -132,6 +178,7 @@ public class FurnitureSpriteController : MonoBehaviour {
 			Debug.LogError("GetSpriteForInstalledObject -- No sprites with name: " + spriteName);
 			return null;
 		}
+
 
 		return furnitureSprites[spriteName];
 

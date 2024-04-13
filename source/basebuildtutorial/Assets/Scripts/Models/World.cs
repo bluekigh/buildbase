@@ -127,7 +127,7 @@ public class World : IXmlSerializable {
 		// What if the object behaviours were scriptable? And therefore were part of the text file
 		// we are reading in now?
 
-		furniturePrototypes["Door"].furnParameters["openess"] = 0;
+		furniturePrototypes["Door"].furnParameters["openness"] = 0;
 		furniturePrototypes["Door"].furnParameters["is_opening"] = 0;
 		furniturePrototypes["Door"].updateActions += FurnitureActions.Door_UpdateAction;
 

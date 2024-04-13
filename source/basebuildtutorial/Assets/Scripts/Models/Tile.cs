@@ -52,6 +52,10 @@ public class Tile :IXmlSerializable {
 	public int X { get; protected set; }
 	public int Y { get; protected set; }
 
+	// FIXME: This is just hardcoded for now.  Basically just a reminder of something we
+	// might want to do more with in the future.
+	const float baseTileMovementCost = 1; 
+
 	public float movementCost {
 		get {
 
@@ -59,9 +63,9 @@ public class Tile :IXmlSerializable {
 				return 0;	// 0 is unwalkable
 
 			if(furniture == null)
-				return 1;
+				return baseTileMovementCost;
 
-			return 1 * furniture.movementCost;
+			return baseTileMovementCost * furniture.movementCost;
 		}
 	}
 

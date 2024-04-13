@@ -61,10 +61,7 @@ public class Character : IXmlSerializable{
 
 		// Are we there yet?
 		if(myJob != null && currTile == myJob.tile) {
-		//if(pathAStar != null && pathAStar.Length() == 1)	{ // We are adjacent to the job site.
-			if(myJob != null) {
-				myJob.DoWork(deltaTime);
-			}
+			myJob.DoWork(deltaTime);
 		}
 
 	}
