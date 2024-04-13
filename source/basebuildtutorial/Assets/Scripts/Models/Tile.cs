@@ -17,6 +17,8 @@ using System.Xml.Serialization;
 // InstalledObjects sitting on top of the floor.
 public enum TileType { Empty, Floor };
 
+public enum ENTERABILITY { Yes, Never, Soon };
+
 public class Tile :IXmlSerializable {
 	private TileType _type = TileType.Empty;
 	public TileType Type {
@@ -177,5 +179,16 @@ public class Tile :IXmlSerializable {
 		Type = (TileType)int.Parse( reader.GetAttribute("Type") );
 	}
 
+	public ENTERABILITY IsEnterable() {
+		// This returns true if you can enter this tile right this moment.
+		if(movementCost == 0)
+			return ENTERABILITY.Never;
 
+		// Check out furniture to see if it has a special block on enterability
+		if(furniture != null && furniture.IsEnterable != null) {
+			return furniture.IsEnterable(furniture);
+		}
+
+		return ENTERABILITY.Yes;
+	}
 }

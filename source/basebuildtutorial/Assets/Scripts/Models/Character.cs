@@ -82,6 +82,10 @@ public class Character : IXmlSerializable{
 			return;	// We're already were we want to be.
 		}
 
+		// currTile = The tile I am currently in (and may be in the process of leaving)
+		// nextTile = The tile I am currently entering
+		// destTile = Our final destination -- we never walk here directly, but instead use it for the pathfinding
+
 		if(nextTile == null || nextTile == currTile) {
 			// Get the next tile from the pathfinder.
 			if(pathAStar == null || pathAStar.Length() == 0) {
@@ -123,10 +127,22 @@ public class Character : IXmlSerializable{
 			Mathf.Pow(currTile.Y-nextTile.Y, 2)
 		);
 
-		if(nextTile.movementCost == 0) {
+		if(nextTile.IsEnterable() == ENTERABILITY.Never) {
+			// Most likely a wall got built, so we just need to reset our pathfinding information.
+			// FIXME: Ideally, when a wall gets spawned, we should invalidate our path immediately,
+			//		  so that we don't waste a bunch of time walking towards a dead end.
+			//		  To save CPU, maybe we can only check every so often?
+			//		  Or maybe we should register a callback to the OnTileChanged event?
 			Debug.LogError("FIXME: A character was trying to enter an unwalkable tile.");
 			nextTile = null;	// our next tile is a no-go
 			pathAStar = null;	// clearly our pathfinding info is out of date.
+			return;
+		}
+		else if ( nextTile.IsEnterable() == ENTERABILITY.Soon ) {
+			// We can't enter the NOW, but we should be able to in the
+			// future. This is likely a DOOR.
+			// So we DON'T bail on our movement/path, but we do return
+			// now and don't actually process the movement.
 			return;
 		}
 

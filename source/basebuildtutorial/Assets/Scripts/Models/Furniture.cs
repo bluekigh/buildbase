@@ -14,8 +14,10 @@ using System.Xml.Serialization;
 
 public class Furniture : IXmlSerializable {
 
-	public Dictionary<string, float> furnParamaters;
+	public Dictionary<string, float> furnParameters;
 	public Action<Furniture, float> updateActions;
+
+	public Func<Furniture, ENTERABILITY> IsEnterable;
 
 	public void Update(float deltaTime) {
 		if(updateActions != null) {
@@ -60,7 +62,7 @@ public class Furniture : IXmlSerializable {
 
 	// Empty constructor is used for serialization
 	public Furniture() {
-		furnParamaters = new Dictionary<string, float>();
+		furnParameters = new Dictionary<string, float>();
 	}
 
 	// Copy Constructor
@@ -71,10 +73,12 @@ public class Furniture : IXmlSerializable {
 		this.height = other.height;
 		this.linksToNeighbour = other.linksToNeighbour;
 
-		this.furnParamaters = new Dictionary<string, float>(other.furnParamaters);
+		this.furnParameters = new Dictionary<string, float>(other.furnParameters);
 
 		if(other.updateActions != null)
 			this.updateActions = (Action<Furniture, float>)other.updateActions.Clone();
+
+		this.IsEnterable = other.IsEnterable;
 	}
 
 	virtual public Furniture Clone(  ) {
@@ -91,7 +95,7 @@ public class Furniture : IXmlSerializable {
 
 		this.funcPositionValidation = this.__IsValidPosition;
 
-		furnParamaters = new Dictionary<string, float>();
+		furnParameters = new Dictionary<string, float>();
 	}
 
 	static public Furniture PlaceInstance( Furniture proto, Tile tile ) {
@@ -194,10 +198,10 @@ public class Furniture : IXmlSerializable {
 		writer.WriteAttributeString( "objectType", objectType );
 		//writer.WriteAttributeString( "movementCost", movementCost.ToString() );
 
-		foreach(string k in furnParamaters.Keys) {
+		foreach(string k in furnParameters.Keys) {
 			writer.WriteStartElement("Param");
 			writer.WriteAttributeString("name", k);
-			writer.WriteAttributeString("value", furnParamaters[k].ToString());
+			writer.WriteAttributeString("value", furnParameters[k].ToString());
 			writer.WriteEndElement();
 		}
 
@@ -213,7 +217,7 @@ public class Furniture : IXmlSerializable {
 			do {
 				string k = reader.GetAttribute("name");
 				float v = float.Parse( reader.GetAttribute("value") );
-				furnParamaters[k] = v;
+				furnParameters[k] = v;
 			} while (reader.ReadToNextSibling("Param"));
 		}
 	}

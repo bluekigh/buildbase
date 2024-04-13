@@ -117,7 +117,7 @@ public class World : IXmlSerializable {
 		furniturePrototypes.Add("Door", 
 			new Furniture(
 				"Door",
-				1,	
+				1,	// Door pathfinding cost
 				1,  // Width
 				1,  // Height
 				false // Links to neighbours and "sort of" becomes part of a large object
@@ -127,8 +127,11 @@ public class World : IXmlSerializable {
 		// What if the object behaviours were scriptable? And therefore were part of the text file
 		// we are reading in now?
 
-		furniturePrototypes["Door"].furnParamaters["openess"] = 0;
+		furniturePrototypes["Door"].furnParameters["openess"] = 0;
+		furniturePrototypes["Door"].furnParameters["is_opening"] = 0;
 		furniturePrototypes["Door"].updateActions += FurnitureActions.Door_UpdateAction;
+
+		furniturePrototypes["Door"].IsEnterable = FurnitureActions.Door_IsEnterable;
 	}
 
 	/// <summary>
@@ -292,9 +295,11 @@ public class World : IXmlSerializable {
 		writer.WriteStartElement("Tiles");
 		for (int x = 0; x < Width; x++) {
 			for (int y = 0; y < Height; y++) {
-				writer.WriteStartElement("Tile");
-				tiles[x,y].WriteXml(writer);
-				writer.WriteEndElement();
+				if(tiles[x,y].Type != TileType.Empty) {
+					writer.WriteStartElement("Tile");
+					tiles[x,y].WriteXml(writer);
+					writer.WriteEndElement();
+				}
 			}
 		}
 		writer.WriteEndElement();
