@@ -51,14 +51,19 @@ public class BuildModeController : MonoBehaviour {
 				// This tile position is valid for this furniture
 				// Create a job for it to be build
 
-				Job j = new Job(t, furnitureType, (theJob) => { 
-					WorldController.Instance.world.PlaceFurniture( furnitureType, theJob.tile );
+				Job j;
 
-					// FIXME: I don't like having to manually and explicitly set
-					// flags that preven conflicts. It's too easy to forget to set/clear them!
-					t.pendingFurnitureJob = null;
+				if(WorldController.Instance.world.furnitureJobPrototypes.ContainsKey(furnitureType)) {
+					// Make a clone of the job prototype
+					j = WorldController.Instance.world.furnitureJobPrototypes[furnitureType].Clone();
+					// Assign the correct tile.
+					j.tile = t;
 				}
-				);
+				else {
+					Debug.LogError("There is no furniture job prototype for '"+furnitureType+"'");
+					j = new Job(t, furnitureType, FurnitureActions.JobComplete_FurnitureBuilding, 0.1f, null);
+				}
+
 
 
 				// FIXME: I don't like having to manually and explicitly set
@@ -80,5 +85,6 @@ public class BuildModeController : MonoBehaviour {
 		}
 
 	}
-	
+
+
 }
