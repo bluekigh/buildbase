@@ -23,7 +23,7 @@ public class Job {
 	Action<Job> cbJobComplete;
 	Action<Job> cbJobCancel;
 
-	Dictionary<string, Inventory> inventoryRequirements;
+	public Dictionary<string, Inventory> inventoryRequirements;
 
 	public Job ( Tile tile, string jobObjectType, Action<Job> cbJobComplete, float jobTime, Inventory[] inventoryRequirements ) {
 		this.tile = tile;
@@ -86,4 +86,37 @@ public class Job {
 		if(cbJobCancel != null)
 			cbJobCancel(this);		
 	}
+
+	public bool HasAllMaterial() {
+		foreach(Inventory inv in inventoryRequirements.Values) {
+			if(inv.maxStackSize > inv.stackSize)
+				return false;
+		}
+
+		return true;
+	}
+
+	public int DesiresInventoryType(Inventory inv) {
+		if(inventoryRequirements.ContainsKey(inv.objectType) == false) {
+			return 0;
+		}
+
+		if(inventoryRequirements[inv.objectType].stackSize >= inventoryRequirements[inv.objectType].maxStackSize) {
+			// We already have all that we need!
+			return 0;
+		}
+
+		// The inventory is of a type we want, and we still need more.
+		return inventoryRequirements[inv.objectType].maxStackSize - inventoryRequirements[inv.objectType].stackSize;
+	}
+
+	public Inventory GetFirstDesiredInventory() {
+		foreach(Inventory inv in inventoryRequirements.Values) {
+			if(inv.maxStackSize > inv.stackSize)
+				return inv;
+		}
+
+		return null;
+	}
+		
 }

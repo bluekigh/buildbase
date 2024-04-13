@@ -35,7 +35,7 @@ public class Tile :IXmlSerializable {
 	}
 
 	// LooseObject is something like a drill or a stack of metal sitting on the floor
-	public Inventory inventory { get; protected set; }
+	public Inventory inventory;
 
 	public Room room;
 

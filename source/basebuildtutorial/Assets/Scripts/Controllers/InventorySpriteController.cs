@@ -80,7 +80,7 @@ public class InventorySpriteController : MonoBehaviour {
 		// Register our callback so that our GameObject gets updated whenever
 		// the object's into changes.
 		// FIXME: Add on changed callbacks
-		//inv.RegisterOnChangedCallback( OnCharacterChanged );
+		inv.RegisterChangedCallback( OnInventoryChanged );
 
 	}
 
@@ -91,17 +91,17 @@ public class InventorySpriteController : MonoBehaviour {
 		// Make sure the furniture's graphics are correct.
 
 		if(inventoryGameObjectMap.ContainsKey(inv) == false) {
-			Debug.LogError("OnCharacterChanged -- trying to change visuals for character not in our map.");
+			Debug.LogError("OnCharacterChanged -- trying to change visuals for inventory not in our map.");
 			return;
 		}
 
-		GameObject char_go = inventoryGameObjectMap[inv];
-		//Debug.Log(furn_go);
-		//Debug.Log(furn_go.GetComponent<SpriteRenderer>());
+		GameObject inv_go = inventoryGameObjectMap[inv];
+		Text text = inv_go.GetComponentInChildren<Text>();
+		// FIXME: If maxStackSize changed to/from 1, then we either need to create or destroy the text
+		if(text != null) {
+			text.text = inv.stackSize.ToString();
+		}
 
-		//char_go.GetComponent<SpriteRenderer>().sprite = GetSpriteForFurniture(furn);
-
-		char_go.transform.position = new Vector3( inv.tile.X, inv.tile.Y, 0);
 	}
 
 
