@@ -35,7 +35,7 @@ public class Tile :IXmlSerializable {
 	}
 
 	// LooseObject is something like a drill or a stack of metal sitting on the floor
-	Inventory inventory;
+	public Inventory inventory { get; protected set; }
 
 	public Room room;
 
@@ -117,6 +117,43 @@ public class Tile :IXmlSerializable {
 		// At this point, everything's fine!
 
 		furniture = objInstance;
+		return true;
+	}
+
+	public bool PlaceInventory(Inventory inv) {
+		if(inv == null) {
+			inventory = null;
+			return true;
+		}
+
+		if(inventory != null) {
+			// There's already inventory here. Maybe we can combine a stack?
+
+			if(inventory.objectType != inv.objectType) {
+				Debug.LogError("Trying to assign inventory to a tile that already has some of a different type.");
+				return false;
+			}
+
+			int numToMove = inv.stackSize;
+			if(inventory.stackSize + numToMove > inventory.maxStackSize) {
+				numToMove = inventory.maxStackSize - inventory.stackSize;
+			}
+
+			inventory.stackSize += numToMove;
+			inv.stackSize -= numToMove;
+
+			return true;
+		}
+
+		// At this point, we know that our current inventory is actually
+		// null.  Now we can't just do a direct assignment, because
+		// the inventory manager needs to know that the old stack is now
+		// empty and has to be removed from the previous lists.
+
+		inventory = inv.Clone();
+		inventory.tile = this;
+		inv.stackSize = 0;
+
 		return true;
 	}
 

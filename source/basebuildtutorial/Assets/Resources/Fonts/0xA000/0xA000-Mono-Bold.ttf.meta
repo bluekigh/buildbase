@@ -10,7 +10,8 @@ TrueTypeFontImporter:
   characterPadding: 0
   includeFontData: 1
   fontNames: []
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 4bbb50583aeb26249a1c4fa706804805, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

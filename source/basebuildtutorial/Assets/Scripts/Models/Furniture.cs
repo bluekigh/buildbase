@@ -115,6 +115,7 @@ public class Furniture : IXmlSerializable {
 		furnParameters = new Dictionary<string, float>();
 	}
 
+
 	static public Furniture PlaceInstance( Furniture proto, Tile tile ) {
 		if( proto.funcPositionValidation(tile) == false ) {
 			Debug.LogError("PlaceInstance -- Position Validity Function returned FALSE.");
