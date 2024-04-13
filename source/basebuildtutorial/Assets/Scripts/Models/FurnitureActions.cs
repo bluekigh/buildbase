@@ -2,21 +2,23 @@
 using System.Collections;
 
 public static class FurnitureActions {
+	// This file contains code which will likely be completely moved to
+	// some LUA files later on and will be parsed at run-time.
 
 	public static void Door_UpdateAction(Furniture furn, float deltaTime) {
 		//Debug.Log("Door_UpdateAction: " + furn.furnParameters["openness"]);
 
-		if(furn.furnParameters["is_opening"] >= 1) {
-			furn.furnParameters["openness"] += deltaTime * 4;	// FIXME: Maybe a door open speed parameter?
-			if (furn.furnParameters["openness"] >= 1) {
-				furn.furnParameters["is_opening"] = 0;
+		if(furn.GetParameter("is_opening") >= 1) {
+			furn.ChangeParameter("openness", deltaTime * 4);	// FIXME: Maybe a door open speed parameter?
+			if (furn.GetParameter("openness") >= 1) {
+				furn.SetParameter("is_opening", 0);
 			}
 		}
 		else {
-			furn.furnParameters["openness"] -= deltaTime * 4;
+			furn.ChangeParameter("openness", deltaTime * -4);
 		}
 
-		furn.furnParameters["openness"] = Mathf.Clamp01(furn.furnParameters["openness"]);
+		furn.SetParameter("openness", Mathf.Clamp01(furn.GetParameter("openness")) );
 
 		if(furn.cbOnChanged != null) {
 			furn.cbOnChanged(furn);
@@ -25,9 +27,9 @@ public static class FurnitureActions {
 
 	public static ENTERABILITY Door_IsEnterable(Furniture furn) {
 		//Debug.Log("Door_IsEnterable");
-		furn.furnParameters["is_opening"] = 1;
+		furn.SetParameter("is_opening", 1);
 
-		if(furn.furnParameters["openness"] >= 1) {
+		if(furn.GetParameter("openness") >= 1) {
 			return ENTERABILITY.Yes;
 		}
 

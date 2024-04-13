@@ -118,15 +118,15 @@ public class FurnitureSpriteController : MonoBehaviour {
 			// If this is a DOOR, let's check OPENNESS and update the sprite.
 			// FIXME: All this hardcoding needs to be generalized later.
 			if(furn.objectType == "Door") {
-				if(furn.furnParameters["openness"] < 0.1f ) {
+				if(furn.GetParameter("openness") < 0.1f ) {
 					// Door is closed
 					spriteName = "Door";
 				}
-				else if(furn.furnParameters["openness"] < 0.5f ) {
+				else if(furn.GetParameter("openness") < 0.5f ) {
 					// Door is a bit open
 					spriteName = "Door_openness_1";
 				}
-				else if(furn.furnParameters["openness"] < 0.9f ) {
+				else if(furn.GetParameter("openness") < 0.9f ) {
 					// Door is a lot open
 					spriteName = "Door_openness_2";
 				}

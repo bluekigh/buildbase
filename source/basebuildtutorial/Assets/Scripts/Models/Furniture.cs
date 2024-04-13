@@ -14,8 +14,19 @@ using System.Xml.Serialization;
 
 public class Furniture : IXmlSerializable {
 
-	public Dictionary<string, float> furnParameters;
-	public Action<Furniture, float> updateActions;
+	/// <summary>
+	/// Custom parameter for this particular piece of furniture.  We are
+	/// using a dictionary because later, custom LUA function will be
+	/// able to use whatever parameters the user/modder would like.
+	/// Basically, the LUA code will bind to this dictionary.
+	/// </summary>
+	protected Dictionary<string, float> furnParameters;
+
+	/// <summary>
+	/// These actions are called every update. They get passed the furniture
+	/// they belong to, plus a deltaTime.
+	/// </summary>
+	protected Action<Furniture, float> updateActions;
 
 	public Func<Furniture, ENTERABILITY> IsEnterable;
 
@@ -24,8 +35,6 @@ public class Furniture : IXmlSerializable {
 			updateActions(this, deltaTime);
 		}
 	}
-
-
 
 	// This represents the BASE tile of the object -- but in practice, large objects may actually occupy
 	// multile tiles.
@@ -67,7 +76,8 @@ public class Furniture : IXmlSerializable {
 		furnParameters = new Dictionary<string, float>();
 	}
 
-	// Copy Constructor
+	// Copy Constructor -- don't call this directly, unless we never
+	// do ANY sub-classing. Instead use Clone(), which is more virtual.
 	protected Furniture( Furniture other ) {
 		this.objectType = other.objectType;
 		this.movementCost = other.movementCost;
@@ -84,6 +94,9 @@ public class Furniture : IXmlSerializable {
 		this.IsEnterable = other.IsEnterable;
 	}
 
+	// Make a copy of the current furniture.  Sub-classed should
+	// override this Clone() if a different (sub-classed) copy
+	// constructor should be run.
 	virtual public Furniture Clone(  ) {
 		return new Furniture( this );
 	}
@@ -97,7 +110,7 @@ public class Furniture : IXmlSerializable {
 		this.height = height;
 		this.linksToNeighbour = linksToNeighbour;
 
-		this.funcPositionValidation = this.__IsValidPosition;
+		this.funcPositionValidation = this.DEFAULT__IsValidPosition;
 
 		furnParameters = new Dictionary<string, float>();
 	}
@@ -169,7 +182,11 @@ public class Furniture : IXmlSerializable {
 
 	// FIXME: These functions should never be called directly,
 	// so they probably shouldn't be public functions of Furniture
-	public bool __IsValidPosition(Tile t) {
+	// This will be replaced by validation checks fed to use from 
+	// LUA files that will be customizable for each piece of furniture.
+	// For example, a door might specific that it needs two walls to
+	// connect to.
+	protected bool DEFAULT__IsValidPosition(Tile t) {
 		// Make sure tile is FLOOR
 		if( t.Type != TileType.Floor ) {
 			return false;
@@ -179,15 +196,6 @@ public class Furniture : IXmlSerializable {
 		if( t.furniture != null ) {
 			return false;
 		}
-
-		return true;
-	}
-
-	public bool __IsValidPosition_Door(Tile t) {
-		if(__IsValidPosition(t) == false)
-			return false;
-
-		// Make sure we have a pair of E/W walls or N/S walls
 
 		return true;
 	}
@@ -224,6 +232,44 @@ public class Furniture : IXmlSerializable {
 				furnParameters[k] = v;
 			} while (reader.ReadToNextSibling("Param"));
 		}
+	}
+
+	/// <summary>
+	/// Gets the custom furniture parameter from a string key.
+	/// </summary>
+	/// <returns>The parameter value (float).</returns>
+	/// <param name="key">Key string.</param>
+	/// <param name="default_value">Default value.</param>
+	public float GetParameter( string key, float default_value = 0 ) {
+		if( furnParameters.ContainsKey(key) == false ) {
+			return default_value;
+		}
+
+		return furnParameters[key];
+	}
+
+	public void SetParameter( string key, float value ) {
+		furnParameters[key] = value;
+	}
+
+	public void ChangeParameter( string key, float value ) {
+		if( furnParameters.ContainsKey(key) == false ) {
+			furnParameters[key] = value;
+		}
+
+		furnParameters[key] += value;
+	}
+
+	/// <summary>
+	/// Registers a function that will be called every Update.
+	/// (Later this implementation might change a bit as we support LUA.)
+	/// </summary>
+	public void RegisterUpdateAction(Action<Furniture, float> a) {
+		updateActions += a;
+	}
+
+	public void UnregisterUpdateAction(Action<Furniture, float> a) {
+		updateActions -= a;
 	}
 
 
