@@ -56,7 +56,6 @@ public class JobSpriteController : MonoBehaviour {
 			if(northTile != null && southTile != null && northTile.furniture != null && southTile.furniture != null &&
 				northTile.furniture.objectType=="Wall" && southTile.furniture.objectType=="Wall") {
 				job_go.transform.rotation = Quaternion.Euler( 0, 0, 90 );
-				job_go.transform.Translate( 1f, 0, 0, Space.World );	// UGLY HACK TO COMPENSATE FOR BOTTOM_LEFT ANCHOR POINT!
 			}
 		}
 

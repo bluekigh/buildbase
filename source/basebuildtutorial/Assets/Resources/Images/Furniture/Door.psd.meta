@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 08f3be664581d2c47bf95c35d69a1e91
-timeCreated: 1457724905
+timeCreated: 1459779955
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -62,14 +62,14 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: 0, y: 12}
-        - {x: 32, y: 12}
-        - {x: 32, y: 20}
-        - {x: 0, y: 20}
+      - - {x: -16, y: -4}
+        - {x: 16, y: -4}
+        - {x: 16, y: 4}
+        - {x: -16, y: 4}
     - name: Door_NS
       rect:
         serializedVersion: 2
@@ -77,14 +77,14 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: 20, y: 0}
-        - {x: 20, y: 32}
-        - {x: 12, y: 32}
-        - {x: 12, y: 0}
+      - - {x: 4, y: -16}
+        - {x: 4, y: 16}
+        - {x: -4, y: 16}
+        - {x: -4, y: -16}
     - name: Door_openness_1
       rect:
         serializedVersion: 2
@@ -92,16 +92,16 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: 0, y: 20}
-        - {x: 0, y: 12}
-        - {x: 23, y: 12}
-        - {x: 25, y: 14}
-        - {x: 25, y: 18}
-        - {x: 23, y: 20}
+      - - {x: -16, y: 4}
+        - {x: -16, y: -4}
+        - {x: 7, y: -4}
+        - {x: 9, y: -2}
+        - {x: 9, y: 2}
+        - {x: 7, y: 4}
     - name: Door_openness_2
       rect:
         serializedVersion: 2
@@ -109,16 +109,16 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: 0, y: 20}
-        - {x: 0, y: 12}
-        - {x: 13, y: 12}
-        - {x: 15, y: 14}
-        - {x: 15, y: 18}
-        - {x: 13, y: 20}
+      - - {x: -16, y: 4}
+        - {x: -16, y: -4}
+        - {x: -3, y: -4}
+        - {x: -1, y: -2}
+        - {x: -1, y: 2}
+        - {x: -3, y: 4}
     - name: Door_openness_3
       rect:
         serializedVersion: 2
@@ -126,16 +126,16 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: 0, y: 20}
-        - {x: 0, y: 12}
-        - {x: 2, y: 12}
-        - {x: 4, y: 14}
-        - {x: 4, y: 18}
-        - {x: 2, y: 20}
+      - - {x: -16, y: 4}
+        - {x: -16, y: -4}
+        - {x: -14, y: -4}
+        - {x: -12, y: -2}
+        - {x: -12, y: 2}
+        - {x: -14, y: 4}
     outline: []
   spritePackingTag: 
   userData: 

@@ -363,6 +363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3011377ee798d974093aab3517ae752c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryUIPrefab: {fileID: 191780, guid: d1e1fcd802f51614595cb99879a132a5, type: 2}
 --- !u!1 &445866539
 GameObject:
   m_ObjectHideFlags: 0

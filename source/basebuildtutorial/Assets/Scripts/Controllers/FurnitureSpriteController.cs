@@ -74,7 +74,6 @@ public class FurnitureSpriteController : MonoBehaviour {
 			if(northTile != null && southTile != null && northTile.furniture != null && southTile.furniture != null &&
 				northTile.furniture.objectType=="Wall" && southTile.furniture.objectType=="Wall") {
 				furn_go.transform.rotation = Quaternion.Euler( 0, 0, 90 );
-				furn_go.transform.Translate( 1f, 0, 0, Space.World );	// UGLY HACK TO COMPENSATE FOR BOTTOM_LEFT ANCHOR POINT!
 			}
 		}
 
