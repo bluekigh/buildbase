@@ -23,6 +23,8 @@ public class Job {
 		get; protected set;
 	}
 
+	public Furniture furniturePrototype;
+
 	public bool acceptsAnyInventoryItem = false;
 
 	Action<Job> cbJobComplete;

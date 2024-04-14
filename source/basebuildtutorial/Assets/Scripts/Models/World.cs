@@ -22,7 +22,7 @@ public class World : IXmlSerializable {
 	// The pathfinding graph used to navigate our world map.
 	public Path_TileGraph tileGraph;
 
-	Dictionary<string, Furniture> furniturePrototypes;
+	public Dictionary<string, Furniture> furniturePrototypes;
 	public Dictionary<string, Job> furnitureJobPrototypes;
 
 	// The tile width of the world.
@@ -205,6 +205,21 @@ public class World : IXmlSerializable {
 				null
 			)
 		);
+
+
+
+		furniturePrototypes.Add("Oxygen Generator", 
+			new Furniture(
+				"Oxygen Generator",
+				10,	// Door pathfinding cost
+				2,  // Width
+				2,  // Height
+				false, // Links to neighbours and "sort of" becomes part of a large object
+				false  // Enclose rooms
+			)
+		);
+
+
 
 
 	}

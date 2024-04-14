@@ -64,6 +64,7 @@ public class BuildModeController : MonoBehaviour {
 					j = new Job(t, furnitureType, FurnitureActions.JobComplete_FurnitureBuilding, 0.1f, null);
 				}
 
+				j.furniturePrototype = WorldController.Instance.world.furniturePrototypes[furnitureType];
 
 
 				// FIXME: I don't like having to manually and explicitly set

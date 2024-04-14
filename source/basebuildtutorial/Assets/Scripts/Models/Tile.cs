@@ -100,23 +100,33 @@ public class Tile :IXmlSerializable {
 		cbTileChanged -= callback;
 	}
 
+	public bool UninstallFurniture() {
+		// Just uninstalling.  FIXME:  What if we have a multi-tile furniture?
+
+		furniture = null;
+		return true;
+	}
+
 	public bool PlaceFurniture(Furniture objInstance) {
+
 		if(objInstance == null) {
-			// We are uninstalling whatever was here before.
-			furniture = null;
-			return true;
+			return UninstallFurniture();
 		}
 
-		// objInstance isn't null
-
-		if(furniture != null) {
-			Debug.LogError("Trying to assign a furniture to a tile that already has one!");
+		if ( objInstance.IsValidPosition(this) == false ) {
+			Debug.LogError("Trying to assign a furniture to a tile that isn't valid!");
 			return false;
 		}
+		
+		for (int x_off = X; x_off < (X + objInstance.Width); x_off++) {
+			for (int y_off = Y; y_off < (Y + objInstance.Height); y_off++) {
 
-		// At this point, everything's fine!
+				Tile t = world.GetTileAt(x_off, y_off);
+				t.furniture = objInstance;
 
-		furniture = objInstance;
+			}
+		}
+
 		return true;
 	}
 
