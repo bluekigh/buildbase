@@ -50,7 +50,7 @@ public class JobSpriteController : MonoBehaviour {
 		sr.color = new Color( 0.5f, 1f, 0.5f, 0.25f );
 		sr.sortingLayerName = "Jobs";
 
-		// FIXME: This hardcoding is not ideal!
+		// FIXME: This hardcoding is not ideal!  <== Understatement
 		if(job.jobObjectType == "Door") {
 			// By default, the door graphic is meant for walls to the east & west
 			// Check to see if we actually have a wall north/south, and if so

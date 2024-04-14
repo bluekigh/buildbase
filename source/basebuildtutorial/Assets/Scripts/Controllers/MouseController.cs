@@ -14,8 +14,12 @@ public class MouseController : MonoBehaviour {
 	Vector3 dragStartPosition;
 	List<GameObject> dragPreviewGameObjects;
 
+	BuildModeController bmc;
+
 	// Use this for initialization
 	void Start () {
+		bmc = GameObject.FindObjectOfType<BuildModeController>();
+
 		dragPreviewGameObjects = new List<GameObject>();
 	}
 
@@ -61,6 +65,10 @@ public class MouseController : MonoBehaviour {
 			dragStartPosition = currFramePosition;
 		}
 
+		if( bmc.IsObjectDraggable() == false ) {
+			dragStartPosition = currFramePosition;
+		}
+
 		int start_x = Mathf.FloorToInt( dragStartPosition.x + 0.5f );
 		int end_x =   Mathf.FloorToInt( currFramePosition.x + 0.5f );
 		int start_y = Mathf.FloorToInt( dragStartPosition.y + 0.5f );
@@ -102,9 +110,6 @@ public class MouseController : MonoBehaviour {
 
 		// End Drag
 		if( Input.GetMouseButtonUp(0) ) {
-
-			BuildModeController bmc = GameObject.FindObjectOfType<BuildModeController>();
-
 			// Loop through all the tiles
 			for (int x = start_x; x <= end_x; x++) {
 				for (int y = start_y; y <= end_y; y++) {
