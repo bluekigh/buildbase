@@ -333,6 +333,13 @@ public class Furniture : IXmlSerializable {
 		if(cbOnRemoved != null)
 			cbOnRemoved(this);
 
+		// Do we need to recalculate our rooms?
+		if(roomEnclosure) {
+			Room.DoRoomFloodFill(this.tile);
+		}
+
+		tile.world.InvalidateTileGraph();
+
 		// At this point, no DATA structures should be pointing to us, so we
 		// should get garbage-collected.
 
