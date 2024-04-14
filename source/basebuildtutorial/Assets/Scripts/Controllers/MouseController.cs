@@ -137,7 +137,7 @@ public class MouseController : MonoBehaviour {
 					if(t != null) {
 						// Display the building hint on top of this tile position
 
-						if(bmc.buildModeIsObjects) {
+						if(bmc.buildMode == BuildMode.FURNITURE) {
 							ShowFurnitureSpriteAtTile( bmc.buildModeObjectType, t );
 						}
 						else {

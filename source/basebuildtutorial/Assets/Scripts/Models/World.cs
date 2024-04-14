@@ -300,6 +300,7 @@ public class World : IXmlSerializable {
 			return null;
 		}
 
+		furn.RegisterOnRemovedCallback(OnFurnitureRemoved);
 		furnitures.Add(furn);
 
 		// Do we need to recalculate our rooms?
@@ -533,5 +534,9 @@ public class World : IXmlSerializable {
 	public void OnInventoryCreated(Inventory inv) {
 		if(cbInventoryCreated != null)
 			cbInventoryCreated(inv);
+	}
+
+	public void OnFurnitureRemoved(Furniture furn) {
+		furnitures.Remove(furn);
 	}
 }

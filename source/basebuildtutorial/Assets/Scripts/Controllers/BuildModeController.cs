@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
+public enum BuildMode {
+	FLOOR,
+	FURNITURE,
+	DECONSTRUCT
+}
+
 public class BuildModeController : MonoBehaviour {
 
-	public bool     buildModeIsObjects = false;
+	public BuildMode     buildMode = BuildMode.FLOOR;
 	TileType buildModeTile = TileType.Floor;
 	public string   buildModeObjectType;
 
@@ -17,7 +23,7 @@ public class BuildModeController : MonoBehaviour {
 	}
 
 	public bool IsObjectDraggable() {
-		if(buildModeIsObjects == false) {
+		if(buildMode == BuildMode.FLOOR || buildMode == BuildMode.DECONSTRUCT) {
 			// floors are draggable
 			return true;
 		}
@@ -29,22 +35,27 @@ public class BuildModeController : MonoBehaviour {
 	}
 
 	public void SetMode_BuildFloor( ) {
-		buildModeIsObjects = false;
+		buildMode = BuildMode.FLOOR;
 		buildModeTile = TileType.Floor;
 
 		GameObject.FindObjectOfType<MouseController>().StartBuildMode();
 	}
 	
 	public void SetMode_Bulldoze( ) {
-		buildModeIsObjects = false;
+		buildMode = BuildMode.FLOOR;
 		buildModeTile = TileType.Empty;
 		GameObject.FindObjectOfType<MouseController>().StartBuildMode();
 	}
 
 	public void SetMode_BuildFurniture( string objectType ) {
 		// Wall is not a Tile!  Wall is an "Furniture" that exists on TOP of a tile.
-		buildModeIsObjects = true;
+		buildMode = BuildMode.FURNITURE;
 		buildModeObjectType = objectType;
+		GameObject.FindObjectOfType<MouseController>().StartBuildMode();
+	}
+
+	public void SetMode_Deconstruct(  ) {
+		buildMode = BuildMode.DECONSTRUCT;
 		GameObject.FindObjectOfType<MouseController>().StartBuildMode();
 	}
 
@@ -53,7 +64,7 @@ public class BuildModeController : MonoBehaviour {
 	}
 
 	public void DoBuild( Tile t ) {
-		if(buildModeIsObjects == true) {
+		if(buildMode == BuildMode.FURNITURE) {
 			// Create the Furniture and assign it to the tile
 
 			// FIXME: This instantly builds the furnite:
@@ -100,9 +111,19 @@ public class BuildModeController : MonoBehaviour {
 
 
 		}
-		else {
+		else if (buildMode == BuildMode.FLOOR){
 			// We are in tile-changing mode.
 			t.Type = buildModeTile;
+		}
+		else if(buildMode == BuildMode.DECONSTRUCT) {
+			// TODO
+			if(t.furniture != null) {
+				t.furniture.Deconstruct();
+			}
+
+		}
+		else {
+			Debug.LogError("UNIMPLMENTED BUILD MODE");
 		}
 
 	}
