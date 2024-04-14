@@ -145,7 +145,9 @@ public class Character : IXmlSerializable{
 				// At this point, the job still requires inventory, but we aren't carrying it!
 
 				// Are we standing on a tile with goods that are desired by the job?
-				if(currTile.inventory != null && myJob.DesiresInventoryType(currTile.inventory) > 0) {
+				if(currTile.inventory != null && 
+					( myJob.canTakeFromStockpile || currTile.furniture == null || currTile.furniture.IsStockpile()==false ) &&  
+					myJob.DesiresInventoryType(currTile.inventory) > 0) {
 					// Pick up the stuff!
 
 					currTile.world.inventoryManager.PlaceInventory(
@@ -165,7 +167,8 @@ public class Character : IXmlSerializable{
 					Inventory supplier = currTile.world.inventoryManager.GetClosestInventoryOfType(
 						desired.objectType, 
 						currTile, 
-						desired.maxStackSize - desired.stackSize
+						desired.maxStackSize - desired.stackSize,
+						myJob.canTakeFromStockpile
 					);
 
 					if(supplier == null) {
@@ -329,6 +332,9 @@ public class Character : IXmlSerializable{
 
 	void OnJobEnded(Job j) {
 		// Job completed or was cancelled.
+
+		j.UnregisterJobCancelCallback(OnJobEnded);
+		j.UnregisterJobCompleteCallback(OnJobEnded);
 
 		if(j != myJob) {
 			Debug.LogError("Character being told about job that isn't his. You forgot to unregister something.");

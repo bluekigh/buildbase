@@ -29,7 +29,7 @@ public class Job {
 	Action<Job> cbJobCancel;
 	Action<Job> cbJobWorked;
 
-	public bool canTakeFromStockile = true;
+	public bool canTakeFromStockpile = true;
 
 	public Dictionary<string, Inventory> inventoryRequirements;
 

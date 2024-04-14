@@ -190,11 +190,12 @@ public class World : IXmlSerializable {
 				1,	// Impassable
 				1,  // Width
 				1,  // Height
-				false, // Links to neighbours and "sort of" becomes part of a large object
+				true, // Links to neighbours and "sort of" becomes part of a large object
 				false  // Enclose rooms
 			)
 		);
 		furniturePrototypes["Stockpile"].RegisterUpdateAction( FurnitureActions.Stockpile_UpdateAction );
+		furniturePrototypes["Stockpile"].tint = new Color32( 186, 31, 31, 255 );
 		furnitureJobPrototypes.Add("Stockpile",
 			new Job( 
 				null, 
@@ -445,7 +446,7 @@ public class World : IXmlSerializable {
 
 		// DEBUGGING ONLY!  REMOVE ME LATER!
 		// Create an Inventory Item
-		Inventory inv = new Inventory("Steel Plate", 50, 2);
+		Inventory inv = new Inventory("Steel Plate", 50, 50);
 		Tile t = GetTileAt(Width/2, Height/2);
 		inventoryManager.PlaceInventory( t, inv );
 		if(cbInventoryCreated != null) {
@@ -512,5 +513,10 @@ public class World : IXmlSerializable {
 			} while( reader.ReadToNextSibling("Character") );
 		}
 
+	}
+
+	public void OnInventoryCreated(Inventory inv) {
+		if(cbInventoryCreated != null)
+			cbInventoryCreated(inv);
 	}
 }

@@ -127,7 +127,7 @@ public static class FurnitureActions {
 
 		// TODO: Later on, add stockpile priorities, so that we can take from a lower
 		// priority stockpile for a higher priority one.
-		j.canTakeFromStockile = false;
+		j.canTakeFromStockpile = false;
 
 		j.RegisterJobWorkedCallback(Stockpile_JobWorked);
 		furn.AddJob( j );
