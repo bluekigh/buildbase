@@ -29,6 +29,8 @@ public class Job {
 	Action<Job> cbJobCancel;
 	Action<Job> cbJobWorked;
 
+	public bool canTakeFromStockile = true;
+
 	public Dictionary<string, Inventory> inventoryRequirements;
 
 	public Job ( Tile tile, string jobObjectType, Action<Job> cbJobComplete, float jobTime, Inventory[] inventoryRequirements ) {
@@ -88,6 +90,19 @@ public class Job {
 	}
 
 	public void DoWork(float workTime) {
+		// Check to make sure we actually have everything we need. 
+		// If not, don't register the work time.
+		if(HasAllMaterial() == false) {
+			//Debug.LogError("Tried to do work on a job that doesn't have all the material.");
+
+			// Job can't actually be worked, but still call the callbacks
+			// so that animations and whatnot can be updated.
+			if(cbJobWorked != null)
+				cbJobWorked(this);
+			
+			return;
+		}
+
 		jobTime -= workTime;
 
 		if(cbJobWorked != null)

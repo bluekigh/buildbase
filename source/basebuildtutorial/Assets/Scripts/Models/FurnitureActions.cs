@@ -44,6 +44,16 @@ public static class FurnitureActions {
 		theJob.tile.pendingFurnitureJob = null;
 	}
 
+	public static Inventory[] Stockpile_GetItemsFromFilter() {
+		// TODO: This should be reading from some kind of UI for this
+		// particular stockpile
+
+		// Since jobs copy arrays automatically, we could already have
+		// an Inventory[] prepared and just return that (as a sort of example filter)
+
+		return new Inventory[1] { new Inventory("Steel Plate", 50, 0) };
+	}
+
 	public static void Stockpile_UpdateAction(Furniture furn, float deltaTime) {
 		// We need to ensure that we have a job on the queue
 		// asking for either:
@@ -51,55 +61,80 @@ public static class FurnitureActions {
 		//  (if we have something): Then IF we are still below the max stack size,
 		//						    that more of the same should be brought to us.
 
+		// TODO: This function doesn't need to run each update.  Once we get a lot
+		// of furniture in a running game, this will run a LOT more than required.
+		// Instead, it only really needs to run whenever:
+		//		-- It gets created
+		//		-- A good gets delivered (at which point we reset the job)
+		//		-- A good gets picked up (at which point we reset the job)
+		//		-- The UI's filter of allowed items gets changed
 
+
+		if( furn.tile.inventory != null && furn.tile.inventory.stackSize >= furn.tile.inventory.maxStackSize ) {
+			// We are full!
+			furn.ClearJobs();
+			return;
+		}
+
+		// Maybe we already have a job queued up?
+		if(furn.JobCount() > 0) {
+			// Cool, all done.
+			return;
+		}
+
+		// We currently are NOT full, but we don't have a job either.
+		// Two possibilities: Either we have SOME inventory, or we have NO inventory.
+
+		// Third possibility: Something is WHACK
+		if( furn.tile.inventory != null && furn.tile.inventory.stackSize == 0 ) {
+			Debug.LogError("Stockpile has a zero-size stack. This is clearly WRONG!");
+			furn.ClearJobs();
+			return;
+		}
+
+		// TODO: In the future, stockpiles -- rather than being a bunch of individual
+		// 1x1 tiles -- should manifest themselves as single, large objects.  This
+		// would respresent our first and probably only VARIABLE sized "furniture" --
+		// at what happenes if there's a "hole" in our stockpile because we have an
+		// actual piece of furniture (like a cooking stating) installed in the middle
+		// of our stockpile?
+		// In any case, once we implement "mega stockpiles", then the job-creation system
+		// could be a lot smarter, in that even if the stockpile has some stuff in it, it
+		// can also still be requestion different object types in its job creation.
+
+		Inventory[] itemsDesired;
 
 		if( furn.tile.inventory == null ) {
-			Debug.Log("furn.tile.inventory == null");
-			// We are empty -- just ask for ANYTHING to be brought here.
-		
-			// Do we already have a job?
-			if(furn.JobCount() > 0) {
-				return;
-			}
-
-			Job j = new Job (
-				furn.tile,
-				null, // ""
-				null,
-				0,
-				new Inventory[1] { new Inventory("Steel Plate", 50, 0) }	// FIXME: Need to be able to indicate all/any type is okay
-			);
-			j.RegisterJobWorkedCallback(Stockpile_JobWorked);
-
-			furn.AddJob( j );
-
+			Debug.Log("Creating job for new stack.");
+			itemsDesired = Stockpile_GetItemsFromFilter();
 		}
-		else if ( furn.tile.inventory.stackSize < furn.tile.inventory.maxStackSize ) {
-			// We have a stack of something started, but we're not full yet.
-			// Do we already have a job?
-			if(furn.JobCount() > 0) {
-				return;
-			}
-
+		else {
+			Debug.Log("Creating job for existing stack.");
 			Inventory desInv = furn.tile.inventory.Clone();
 			desInv.maxStackSize -= desInv.stackSize;
 			desInv.stackSize = 0;
 
-			Job j = new Job (
-				furn.tile,
-				null, // ""
-				null,
-				0,
-				new Inventory[1] { desInv  }
-			);
-			j.RegisterJobWorkedCallback(Stockpile_JobWorked);
-
-			furn.AddJob( j );
+			itemsDesired = new Inventory[] { desInv };
 		}
 
+		Job j = new Job (
+			furn.tile,
+			null, // ""
+			null,
+			0,
+			itemsDesired
+		);
+
+		// TODO: Later on, add stockpile priorities, so that we can take from a lower
+		// priority stockpile for a higher priority one.
+		j.canTakeFromStockile = false;
+
+		j.RegisterJobWorkedCallback(Stockpile_JobWorked);
+		furn.AddJob( j );
 	}
 
 	static void Stockpile_JobWorked(Job j) {
+		Debug.Log("Stockpile_JobWorked");
 		j.tile.furniture.RemoveJob(j);
 
 		// TODO: Change this when we figure out what we're doing for the all/any pickup job.

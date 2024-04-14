@@ -17,6 +17,7 @@ public class JobQueue {
 	}
 
 	public void Enqueue(Job j) {
+		Debug.Log("Adding job to queue. Existing queue size: " + jobQueue.Count);
 		if(j.jobTime < 0) {
 			// Job has a negative job time, so it's not actually
 			// supposed to be queued up.  Just insta-complete it.
@@ -51,7 +52,8 @@ public class JobQueue {
 		List<Job> jobs = new List<Job>(jobQueue);
 
 		if(jobs.Contains(j) == false) {
-			Debug.LogError("Trying to remove a job that doesn't exist on the queue.");
+			//Debug.LogError("Trying to remove a job that doesn't exist on the queue.");
+			// Most likely, this job wasn't on the queue because a character was working it!
 			return;
 		}
 
