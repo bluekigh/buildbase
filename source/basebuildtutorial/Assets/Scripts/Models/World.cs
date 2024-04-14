@@ -95,7 +95,7 @@ public class World : IXmlSerializable {
 		tiles = new Tile[Width,Height];
 
 		rooms = new List<Room>();
-		rooms.Add( new Room() ); // Create the outside?
+		rooms.Add( new Room(this) ); // Create the outside?
 
 		for (int x = 0; x < Width; x++) {
 			for (int y = 0; y < Height; y++) {
@@ -218,7 +218,7 @@ public class World : IXmlSerializable {
 				false  // Enclose rooms
 			)
 		);
-
+		furniturePrototypes["Oxygen Generator"].RegisterUpdateAction( FurnitureActions.OxygenGenerator_UpdateAction );
 
 
 

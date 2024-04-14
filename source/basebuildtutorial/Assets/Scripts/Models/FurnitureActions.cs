@@ -147,4 +147,15 @@ public static class FurnitureActions {
 		}
 	}
 
+
+	public static void OxygenGenerator_UpdateAction(Furniture furn, float deltaTime) {
+		if(furn.tile.room.GetGasAmount("O2") < 0.20f) {
+			furn.tile.room.ChangeGas("O2", 0.01f * deltaTime);	// TODO: Replace hardcoded value!
+			// TODO: Consume electricity while running!
+		}
+		else {
+			// TODO: Stand-by electric usage?
+		}
+	}
+
 }
