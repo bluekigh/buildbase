@@ -85,7 +85,6 @@ public class InventorySpriteController : MonoBehaviour {
 	}
 
 	void OnInventoryChanged( Inventory inv ) {
-		// FIXME:  Still needs to work!  And get called!
 
 		//Debug.Log("OnFurnitureChanged");
 		// Make sure the furniture's graphics are correct.
@@ -96,10 +95,18 @@ public class InventorySpriteController : MonoBehaviour {
 		}
 
 		GameObject inv_go = inventoryGameObjectMap[inv];
-		Text text = inv_go.GetComponentInChildren<Text>();
-		// FIXME: If maxStackSize changed to/from 1, then we either need to create or destroy the text
-		if(text != null) {
-			text.text = inv.stackSize.ToString();
+		if(inv.stackSize > 0) {
+			Text text = inv_go.GetComponentInChildren<Text>();
+			// FIXME: If maxStackSize changed to/from 1, then we either need to create or destroy the text
+			if(text != null) {
+				text.text = inv.stackSize.ToString();
+			}
+		}
+		else {
+			// This stack has gone to zero, so remove the sprite!
+			Destroy(inv_go);
+			inventoryGameObjectMap.Remove(inv);
+			inv.UnregisterChangedCallback(OnInventoryChanged);
 		}
 
 	}

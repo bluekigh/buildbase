@@ -30,6 +30,8 @@ public class Furniture : IXmlSerializable {
 
 	public Func<Furniture, ENTERABILITY> IsEnterable;
 
+	List<Job> jobs;
+
 	public void Update(float deltaTime) {
 		if(updateActions != null) {
 			updateActions(this, deltaTime);
@@ -74,6 +76,7 @@ public class Furniture : IXmlSerializable {
 	// Empty constructor is used for serialization
 	public Furniture() {
 		furnParameters = new Dictionary<string, float>();
+		jobs = new List<Job>();
 	}
 
 	// Copy Constructor -- don't call this directly, unless we never
@@ -87,6 +90,7 @@ public class Furniture : IXmlSerializable {
 		this.linksToNeighbour = other.linksToNeighbour;
 
 		this.furnParameters = new Dictionary<string, float>(other.furnParameters);
+		jobs = new List<Job>();
 
 		if(other.updateActions != null)
 			this.updateActions = (Action<Furniture, float>)other.updateActions.Clone();
@@ -273,5 +277,24 @@ public class Furniture : IXmlSerializable {
 		updateActions -= a;
 	}
 
+	public int JobCount() {
+		return jobs.Count;
+	}
 
+	public void AddJob(Job j) {
+		jobs.Add(j);
+		tile.world.jobQueue.Enqueue(j);
+	}
+
+	public void RemoveJob(Job j) {
+		jobs.Remove(j);
+		j.CancelJob();
+		tile.world.jobQueue.Remove(j);
+	}
+
+	public void ClearJobs() {
+		foreach(Job j in jobs) {
+			RemoveJob(j);
+		}
+	}
 }

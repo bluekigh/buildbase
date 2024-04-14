@@ -79,8 +79,12 @@ public class InventoryManager {
 	}
 
 	public bool PlaceInventory(Character character, Inventory sourceInventory, int amount = -1) {
-		if(amount < 0)
+		if(amount < 0) {
 			amount = sourceInventory.stackSize;
+		}
+		else {
+			amount = Mathf.Min( amount, sourceInventory.stackSize );
+		}
 
 		if(character.inventory == null) {
 			character.inventory = sourceInventory.Clone();

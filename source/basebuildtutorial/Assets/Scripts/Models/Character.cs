@@ -108,6 +108,10 @@ public class Character : IXmlSerializable{
 					if(currTile == myJob.tile) {
 						// We are at the job's site, so drop the inventory
 						currTile.world.inventoryManager.PlaceInventory(myJob, inventory);
+						myJob.DoWork(0); // This will call all cbJobWorked callbacks, because even though
+										 // we aren't progressing, it might want to do something with the fact
+										 // that the requirements are being met.
+
 						// Are we still carrying things?
 						if(inventory.stackSize == 0) {
 							inventory = null;
@@ -144,7 +148,11 @@ public class Character : IXmlSerializable{
 				if(currTile.inventory != null && myJob.DesiresInventoryType(currTile.inventory) > 0) {
 					// Pick up the stuff!
 
-					currTile.world.inventoryManager.PlaceInventory(this, currTile.inventory, myJob.DesiresInventoryType(currTile.inventory));
+					currTile.world.inventoryManager.PlaceInventory(
+						this, 
+						currTile.inventory,
+						myJob.DesiresInventoryType(currTile.inventory)
+					);
 
 				}
 				else {

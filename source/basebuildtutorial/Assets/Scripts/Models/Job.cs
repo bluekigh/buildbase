@@ -14,14 +14,20 @@ public class Job {
 	// working at a desk, and maybe even fighting enemies.
 
 	public Tile tile;
-	float jobTime;
+	public float jobTime {
+		get;
+		protected set;
+	}
 
 	public string jobObjectType {
 		get; protected set;
 	}
 
+	public bool acceptsAnyInventoryItem = false;
+
 	Action<Job> cbJobComplete;
 	Action<Job> cbJobCancel;
+	Action<Job> cbJobWorked;
 
 	public Dictionary<string, Inventory> inventoryRequirements;
 
@@ -73,8 +79,19 @@ public class Job {
 		cbJobCancel -= cb;
 	}
 
+	public void RegisterJobWorkedCallback(Action<Job> cb) {
+		cbJobWorked += cb;
+	}
+
+	public void UnregisterJobWorkedCallback(Action<Job> cb) {
+		cbJobWorked -= cb;
+	}
+
 	public void DoWork(float workTime) {
 		jobTime -= workTime;
+
+		if(cbJobWorked != null)
+			cbJobWorked(this);
 
 		if(jobTime <= 0) {
 			if(cbJobComplete != null)
@@ -84,7 +101,9 @@ public class Job {
 
 	public void CancelJob() {
 		if(cbJobCancel != null)
-			cbJobCancel(this);		
+			cbJobCancel(this);	
+
+		tile.world.jobQueue.Remove(this);
 	}
 
 	public bool HasAllMaterial() {
@@ -97,6 +116,10 @@ public class Job {
 	}
 
 	public int DesiresInventoryType(Inventory inv) {
+		if(acceptsAnyInventoryItem) {
+			return inv.maxStackSize;
+		}
+
 		if(inventoryRequirements.ContainsKey(inv.objectType) == false) {
 			return 0;
 		}
