@@ -72,7 +72,7 @@ public static class FurnitureActions {
 
 		if( furn.tile.inventory != null && furn.tile.inventory.stackSize >= furn.tile.inventory.maxStackSize ) {
 			// We are full!
-			furn.ClearJobs();
+			furn.CancelJobs();
 			return;
 		}
 
@@ -88,7 +88,7 @@ public static class FurnitureActions {
 		// Third possibility: Something is WHACK
 		if( furn.tile.inventory != null && furn.tile.inventory.stackSize == 0 ) {
 			Debug.LogError("Stockpile has a zero-size stack. This is clearly WRONG!");
-			furn.ClearJobs();
+			furn.CancelJobs();
 			return;
 		}
 
@@ -135,7 +135,7 @@ public static class FurnitureActions {
 
 	static void Stockpile_JobWorked(Job j) {
 		Debug.Log("Stockpile_JobWorked");
-		j.furniture.RemoveJob(j);
+		j.CancelJob();
 
 		// TODO: Change this when we figure out what we're doing for the all/any pickup job.
 		foreach(Inventory inv in j.inventoryRequirements.Values) {
@@ -160,11 +160,27 @@ public static class FurnitureActions {
 	}
 
 	public static void MiningDroneStation_UpdateAction(Furniture furn, float deltaTime) {
+		
+		Tile spawnSpot = furn.GetSpawnSpotTile();
 
 		if( furn.JobCount() > 0 ) {
-			// We already have a job, so nothing to do.
+
+			// Check to see if the Metal Plate destination tile is full.
+			if( spawnSpot.inventory != null && spawnSpot.inventory.stackSize >= spawnSpot.inventory.maxStackSize ) {
+				// We should stop this job, because it's impossible to make any more items.
+				furn.CancelJobs();
+			}
+
 			return;
 		}
+
+		// If we get here, then we have no current job. Check to see if our destination is full.
+		if( spawnSpot.inventory != null && spawnSpot.inventory.stackSize >= spawnSpot.inventory.maxStackSize ) {
+			// We are full! Don't make a job!
+			return;
+		}
+
+		// If we get here, we need to CREATE a new job.
 
 		Tile jobSpot = furn.GetJobSpotTile();
 
@@ -178,16 +194,17 @@ public static class FurnitureActions {
 			null,
 			MiningDroneStation_JobComplete,
 			1f,
-			null
+			null,
+			true	// This job repeats until the destination tile is full.
 		);
 
 		furn.AddJob( j );
 	}
 
 	public static void MiningDroneStation_JobComplete(Job j) {
-		World.current.inventoryManager.PlaceInventory( j.tile, new Inventory("Steel Plate", 50, 2) );
+		
+		World.current.inventoryManager.PlaceInventory( j.furniture.GetSpawnSpotTile(), new Inventory("Steel Plate", 50, 20) );
 
-		j.furniture.RemoveJob(j);
 	}
 
 

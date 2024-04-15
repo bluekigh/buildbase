@@ -72,8 +72,7 @@ public class Character : IXmlSerializable{
 			return;
 
 		destTile = myJob.tile;
-		myJob.RegisterJobCompleteCallback(OnJobEnded);
-		myJob.RegisterJobCancelCallback(OnJobEnded);
+		myJob.RegisterJobStoppedCallback(OnJobStopped);
 
 		// Immediately check to see if the job tile is reachable.
 		// NOTE: We might not be pathing to it right away (due to 
@@ -336,11 +335,10 @@ public class Character : IXmlSerializable{
 		cbCharacterChanged -= cb;
 	}
 
-	void OnJobEnded(Job j) {
-		// Job completed or was cancelled.
+	void OnJobStopped(Job j) {
+		// Job completed (if non-repeating) or was cancelled.
 
-		j.UnregisterJobCancelCallback(OnJobEnded);
-		j.UnregisterJobCompleteCallback(OnJobEnded);
+		j.UnregisterJobStoppedCallback(OnJobStopped);
 
 		if(j != myJob) {
 			Debug.LogError("Character being told about job that isn't his. You forgot to unregister something.");

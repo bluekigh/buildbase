@@ -39,6 +39,9 @@ public class Furniture : IXmlSerializable {
 	// furniture tile itself!  (In fact, this will probably be common).
 	public Vector2 jobSpotOffset = Vector2.zero;
 
+	// If the job causes some kind of object to be spawned, where will it appear?
+	public Vector2 jobSpawnSpotOffset = Vector2.zero;
+
 	public void Update(float deltaTime) {
 		if(updateActions != null) {
 			updateActions(this, deltaTime);
@@ -101,6 +104,7 @@ public class Furniture : IXmlSerializable {
 		this.linksToNeighbour = other.linksToNeighbour;
 
 		this.jobSpotOffset = other.jobSpotOffset;
+		this.jobSpawnSpotOffset = other.jobSpawnSpotOffset;
 
 		this.furnParameters = new Dictionary<string, float>(other.furnParameters);
 		jobs = new List<Job>();
@@ -316,19 +320,31 @@ public class Furniture : IXmlSerializable {
 	public void AddJob(Job j) {
 		j.furniture = this;
 		jobs.Add(j);
+		j.RegisterJobStoppedCallback(OnJobStopped);
 		World.current.jobQueue.Enqueue(j);
 	}
 
-	public void RemoveJob(Job j) {
-		jobs.Remove(j);
-		j.CancelJob();
-		j.furniture = null;
-		World.current.jobQueue.Remove(j);
+	void OnJobStopped(Job j) {
+		RemoveJob(j);
 	}
 
-	public void ClearJobs() {
-		foreach(Job j in jobs) {
+	protected void RemoveJob(Job j) {
+		j.UnregisterJobStoppedCallback(OnJobStopped);
+		jobs.Remove(j);
+		j.furniture = null;
+	}
+
+	protected void ClearJobs() {
+		Job[] jobs_array = jobs.ToArray();
+		foreach(Job j in jobs_array) {
 			RemoveJob(j);
+		}
+	}
+
+	public void CancelJobs() {
+		Job[] jobs_array = jobs.ToArray();
+		foreach(Job j in jobs_array) {
+			j.CancelJob();
 		}
 	}
 
@@ -358,6 +374,10 @@ public class Furniture : IXmlSerializable {
 
 	public Tile GetJobSpotTile() {
 		return World.current.GetTileAt( tile.X + (int)jobSpotOffset.x, tile.Y + (int)jobSpotOffset.y );
+	}
+
+	public Tile GetSpawnSpotTile() {
+		return World.current.GetTileAt( tile.X + (int)jobSpawnSpotOffset.x, tile.Y + (int)jobSpawnSpotOffset.y );
 	}
 
 }
