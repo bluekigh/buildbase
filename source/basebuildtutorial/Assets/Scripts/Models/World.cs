@@ -70,6 +70,17 @@ public class World : IXmlSerializable {
 		return rooms[0];
 	}
 
+	public int GetRoomID(Room r) {
+		return rooms.IndexOf(r);
+	}
+
+	public Room GetRoomFromID(int i) {
+		if( i < 0 || i > rooms.Count-1) 
+			return null;
+		
+		return rooms[i];
+	}
+
 	public void AddRoom(Room r) {
 		rooms.Add(r);
 	}
@@ -101,7 +112,7 @@ public class World : IXmlSerializable {
 		tiles = new Tile[Width,Height];
 
 		rooms = new List<Room>();
-		rooms.Add( new Room(this) ); // Create the outside?
+		rooms.Add( new Room() ); // Create the outside?
 
 		for (int x = 0; x < Width; x++) {
 			for (int y = 0; y < Height; y++) {
@@ -421,6 +432,18 @@ public class World : IXmlSerializable {
 		writer.WriteAttributeString( "Width", Width.ToString() );
 		writer.WriteAttributeString( "Height", Height.ToString() );
 
+		writer.WriteStartElement("Rooms");
+		foreach(Room r in rooms) {
+
+			if(GetOutsideRoom() == r)
+				continue;	// Skip the outside room. Alternatively, should SetupWorld be changed to not create one?
+
+			writer.WriteStartElement("Room");
+			r.WriteXml(writer);
+			writer.WriteEndElement();
+		}
+		writer.WriteEndElement();
+
 		writer.WriteStartElement("Tiles");
 		for (int x = 0; x < Width; x++) {
 			for (int y = 0; y < Height; y++) {
@@ -470,6 +493,9 @@ public class World : IXmlSerializable {
 
 		while(reader.Read()) {
 			switch(reader.Name) {
+				case "Rooms":
+					ReadXml_Rooms(reader);
+					break;
 				case "Tiles":
 					ReadXml_Tiles(reader);
 					break;
@@ -484,7 +510,7 @@ public class World : IXmlSerializable {
 
 		// DEBUGGING ONLY!  REMOVE ME LATER!
 		// Create an Inventory Item
-		Inventory inv = new Inventory("Steel Plate", 50, 50);
+/*		Inventory inv = new Inventory("Steel Plate", 50, 50);
 		Tile t = GetTileAt(Width/2, Height/2);
 		inventoryManager.PlaceInventory( t, inv );
 		if(cbInventoryCreated != null) {
@@ -504,7 +530,7 @@ public class World : IXmlSerializable {
 		if(cbInventoryCreated != null) {
 			cbInventoryCreated( t.inventory );
 		}
-	}
+*/	}
 
 	void ReadXml_Tiles(XmlReader reader) {
 		Debug.Log("ReadXml_Tiles");
@@ -536,13 +562,39 @@ public class World : IXmlSerializable {
 				furn.ReadXml(reader);
 			} while (reader.ReadToNextSibling("Furniture"));
 
-			foreach(Furniture furn in furnitures) {
+/*			We don't need to do a flood fill on load, because we're getting room info
+ 			from the save file
+ 			
+ 			foreach(Furniture furn in furnitures) {
 				Room.DoRoomFloodFill( furn.tile, true );
 			}
+*/
+		}
+
+	}
+
+	void ReadXml_Rooms(XmlReader reader) {
+		Debug.Log("ReadXml_Rooms");
+
+		if(reader.ReadToDescendant("Room")) {
+			do {
+				/*int x = int.Parse( reader.GetAttribute("X") );
+				int y = int.Parse( reader.GetAttribute("Y") );
+
+				Furniture furn = PlaceFurniture( reader.GetAttribute("objectType"), tiles[x,y], false );*/
+
+				//furn.ReadXml(reader);
+
+				Room r = new Room();
+				rooms.Add(r);
+				r.ReadXml(reader);
+			} while (reader.ReadToNextSibling("Room"));
 
 		}
 
 	}
+
+
 
 	void ReadXml_Characters(XmlReader reader) {
 		Debug.Log("ReadXml_Characters");

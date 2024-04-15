@@ -233,11 +233,18 @@ public class Tile :IXmlSerializable {
 	public void WriteXml(XmlWriter writer) {
 		writer.WriteAttributeString( "X", X.ToString() );
 		writer.WriteAttributeString( "Y", Y.ToString() );
+		writer.WriteAttributeString( "RoomID", room==null ? "-1" : room.ID.ToString() );
 		writer.WriteAttributeString("Type", ((int)Type).ToString() );
 	}
 
 	public void ReadXml(XmlReader reader) {
+		// X and Y have already been read/processed
+
+		room = World.current.GetRoomFromID( int.Parse( reader.GetAttribute("RoomID") ) );
+
 		Type = (TileType)int.Parse( reader.GetAttribute("Type") );
+
+
 	}
 
 	public ENTERABILITY IsEnterable() {

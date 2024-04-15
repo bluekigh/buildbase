@@ -1,19 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
-public class Room {
+
+public class Room : IXmlSerializable {
 
 	Dictionary<string, float> atmosphericGasses;
 
 	List<Tile> tiles;
 
-	World world;
-
-	public Room(World world) {
-		this.world = world;
+	public Room() {
 		tiles = new List<Tile>();
 		atmosphericGasses = new Dictionary<string, float>();
+	}
+
+	public int ID {
+		get {
+			return World.current.GetRoomID( this );
+		}
 	}
 
 	public void AssignTile( Tile t ) {
@@ -39,7 +47,7 @@ public class Room {
 	}
 
 	public bool IsOutsideRoom() {
-		return this == world.GetOutsideRoom();
+		return this == World.current.GetOutsideRoom();
 	}
 
 	public void ChangeGas(string name, float amount) {
@@ -131,7 +139,6 @@ public class Room {
 			// though this MAY not be the case any longer (i.e. the wall was 
 			// probably deconstructed. So the only thing we have to try is
 			// to spawn ONE new room starting from the tile in question.
-
 			ActualFloodFill( sourceTile, null );
 		}
 
@@ -168,7 +175,7 @@ public class Room {
 
 		// If we get to this point, then we know that we need to create a new room.
 
-		Room newRoom = new Room(World.current);
+		Room newRoom = new Room();
 		Queue<Tile> tilesToCheck = new Queue<Tile>();
 		tilesToCheck.Enqueue(tile);
 
@@ -246,5 +253,34 @@ public class Room {
 			this.atmosphericGasses[n] = other.atmosphericGasses[n];
 		}
 	}
+
+	public XmlSchema GetSchema() {
+		return null;
+	}
+
+
+	public void WriteXml(XmlWriter writer) {
+		// Write out gas info
+		foreach(string k in atmosphericGasses.Keys) {
+			writer.WriteStartElement("Param");
+			writer.WriteAttributeString("name", k);
+			writer.WriteAttributeString("value", atmosphericGasses[k].ToString());
+			writer.WriteEndElement();
+		}
+
+	}
+
+	public void ReadXml(XmlReader reader) {
+		// Read gas info
+		if(reader.ReadToDescendant("Param")) {
+			do {
+				string k = reader.GetAttribute("name");
+				float v = float.Parse( reader.GetAttribute("value") );
+				atmosphericGasses[k] = v;
+			} while (reader.ReadToNextSibling("Param"));
+		}
+	}
+
+
 
 }

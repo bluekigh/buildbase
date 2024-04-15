@@ -149,6 +149,13 @@ public static class FurnitureActions {
 
 
 	public static void OxygenGenerator_UpdateAction(Furniture furn, float deltaTime) {
+
+		if(furn.tile.room== null)  {
+			Debug.LogError("Why are we in a null room?");
+			return;
+		}
+			
+
 		if(furn.tile.room.GetGasAmount("O2") < 0.20f) {
 			// TODO: Change the gas contribution based on the volume of the room
 			furn.tile.room.ChangeGas("O2", 0.01f * deltaTime);	// TODO: Replace hardcoded value!
