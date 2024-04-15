@@ -103,6 +103,7 @@ public class Furniture : IXmlSerializable {
 	public Furniture() {
 		furnParameters = new Dictionary<string, float>();
 		jobs = new List<Job>();
+		this.funcPositionValidation = this.DEFAULT__IsValidPosition;
 	}
 
 	// Copy Constructor -- don't call this directly, unless we never
@@ -274,10 +275,47 @@ public class Furniture : IXmlSerializable {
 
 	}
 
-	public void ReadXmlPrototype(XmlReader reader) {
+	public void ReadXmlPrototype(XmlReader reader_parent) {
+		Debug.Log("ReadXmlPrototype");
+
+		objectType = reader_parent.GetAttribute("objectType");
+
+		XmlReader reader = reader_parent.ReadSubtree();
 
 
-		ReadXmlParams(reader);	// Read in the Param tag
+		while(reader.Read()) {
+			switch(reader.Name) {
+				case "Name":
+					reader.Read();
+					Name = reader.ReadContentAsString();
+					break;
+				case "MovementCost":
+					reader.Read();
+					movementCost = reader.ReadContentAsFloat();
+					break;
+				case "Width":
+					reader.Read();
+					Width = reader.ReadContentAsInt();
+					break;
+				case "Height":
+					reader.Read();
+					Height = reader.ReadContentAsInt();
+					break;
+				case "LinksToNeighbours":
+					reader.Read();
+					linksToNeighbour = reader.ReadContentAsBoolean();
+					break;
+				case "EnclosesRooms":
+					reader.Read();
+					roomEnclosure = reader.ReadContentAsBoolean();
+					break;
+				case "Params":
+					ReadXmlParams(reader);	// Read in the Param tag
+					break;
+			}
+		}
+
+
 	}
 
 	public void ReadXml(XmlReader reader) {
