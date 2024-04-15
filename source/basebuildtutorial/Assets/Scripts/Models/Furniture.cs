@@ -9,9 +9,12 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using MoonSharp.Interpreter;
+
 
 // InstalledObjects are things like walls, doors, and furniture (e.g. a sofa)
 
+[MoonSharpUserData]
 public class Furniture : IXmlSerializable {
 
 	/// <summary>
@@ -26,9 +29,12 @@ public class Furniture : IXmlSerializable {
 	/// These actions are called every update. They get passed the furniture
 	/// they belong to, plus a deltaTime.
 	/// </summary>
-	protected Action<Furniture, float> updateActions;
+	//protected Action<Furniture, float> updateActions;
+	protected List<string> updateActions;
 
-	public Func<Furniture, ENTERABILITY> IsEnterable;
+	//public Func<Furniture, ENTERABILITY> IsEnterable;
+	protected string isEnterableAction;
+
 
 	List<Job> jobs;
 
@@ -44,8 +50,22 @@ public class Furniture : IXmlSerializable {
 
 	public void Update(float deltaTime) {
 		if(updateActions != null) {
-			updateActions(this, deltaTime);
+			//updateActions(this, deltaTime);
+			FurnitureActions.CallFunctionsWithFurniture( updateActions.ToArray(), this, deltaTime );
 		}
+	}
+
+	public ENTERABILITY IsEnterable() {
+		if(isEnterableAction == null || isEnterableAction.Length == 0) {
+			return ENTERABILITY.Yes;
+		}
+
+		//FurnitureActions.CallFunctionsWithFurniture( isEnterableActions.ToArray(), this );
+
+		DynValue ret = FurnitureActions.CallFunction( isEnterableAction, this );
+
+		return (ENTERABILITY)ret.Number;
+
 	}
 
 	// This represents the BASE tile of the object -- but in practice, large objects may actually occupy
@@ -101,6 +121,7 @@ public class Furniture : IXmlSerializable {
 
 	// Empty constructor is used for serialization
 	public Furniture() {
+		updateActions = new List<string>();
 		furnParameters = new Dictionary<string, float>();
 		jobs = new List<Job>();
 		this.funcPositionValidation = this.DEFAULT__IsValidPosition;
@@ -125,12 +146,13 @@ public class Furniture : IXmlSerializable {
 		jobs = new List<Job>();
 
 		if(other.updateActions != null)
-			this.updateActions = (Action<Furniture, float>)other.updateActions.Clone();
+			this.updateActions = new List<string>( other.updateActions );
+
+		this.isEnterableAction = other.isEnterableAction;
 
 		if(other.funcPositionValidation != null)
 			this.funcPositionValidation = (Func<Tile, bool>)other.funcPositionValidation.Clone();
 
-		this.IsEnterable = other.IsEnterable;
 	}
 
 	// Make a copy of the current furniture.  Sub-classed should
@@ -141,7 +163,7 @@ public class Furniture : IXmlSerializable {
 	}
 
 	// Create furniture from parameters -- this will probably ONLY ever be used for prototypes
-	public Furniture ( string objectType, float movementCost = 1f, int width=1, int height=1, bool linksToNeighbour=false, bool roomEnclosure = false ) {
+/*	public Furniture ( string objectType, float movementCost = 1f, int width=1, int height=1, bool linksToNeighbour=false, bool roomEnclosure = false ) {
 		this.objectType = objectType;
 		this.movementCost = movementCost;
 		this.roomEnclosure = roomEnclosure;
@@ -151,9 +173,11 @@ public class Furniture : IXmlSerializable {
 
 		this.funcPositionValidation = this.DEFAULT__IsValidPosition;
 
+		updateActions = new List<string>();
+
 		furnParameters = new Dictionary<string, float>();
 	}
-
+*/
 
 	static public Furniture PlaceInstance( Furniture proto, Tile tile ) {
 		if( proto.funcPositionValidation(tile) == false ) {
@@ -338,8 +362,13 @@ public class Furniture : IXmlSerializable {
 					break;
 				case "OnUpdate":
 
-					//string functionName = reader.GetAttribute("FunctionName");
-					//RegisterUpdateAction( StringToFunction( functionName ) );
+					string functionName = reader.GetAttribute("FunctionName");
+					RegisterUpdateAction( functionName );
+
+					break;
+				case "IsEnterable":
+
+					isEnterableAction = reader.GetAttribute("FunctionName");
 
 					break;
 				case "Params":
@@ -381,13 +410,18 @@ public class Furniture : IXmlSerializable {
 	/// <returns>The parameter value (float).</returns>
 	/// <param name="key">Key string.</param>
 	/// <param name="default_value">Default value.</param>
-	public float GetParameter( string key, float default_value = 0 ) {
+	public float GetParameter( string key, float default_value ) {
 		if( furnParameters.ContainsKey(key) == false ) {
 			return default_value;
 		}
 
 		return furnParameters[key];
 	}
+
+	public float GetParameter( string key ) {
+		return GetParameter(key, 0);
+	}
+		
 
 	public void SetParameter( string key, float value ) {
 		furnParameters[key] = value;
@@ -405,12 +439,12 @@ public class Furniture : IXmlSerializable {
 	/// Registers a function that will be called every Update.
 	/// (Later this implementation might change a bit as we support LUA.)
 	/// </summary>
-	public void RegisterUpdateAction(Action<Furniture, float> a) {
-		updateActions += a;
+	public void RegisterUpdateAction(string luaFunctionName) {
+		updateActions.Add(luaFunctionName);
 	}
 
-	public void UnregisterUpdateAction(Action<Furniture, float> a) {
-		updateActions -= a;
+	public void UnregisterUpdateAction(string luaFunctionName) {
+		updateActions.Remove(luaFunctionName);
 	}
 
 	public int JobCount() {

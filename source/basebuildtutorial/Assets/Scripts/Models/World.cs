@@ -103,24 +103,7 @@ public class World : IXmlSerializable {
 
 	void SetupWorld(int width, int height) {
 
-/*		string myLuaCode;
-
-		// Read the lua code from the file
-		TextAsset ta = Resources.Load<TextAsset>("LUA/Furniture");
-
-		if(ta == null) {
-			Debug.LogError("Failed to load LUA code text asset!!");
-			return;
-		}
-
-		myLuaCode = ta.text;
-
-		Debug.Log("My LUA Code");
-		Debug.Log(myLuaCode);
-
-		FurnitureActions fa = new FurnitureActions( myLuaCode );
-
-*/		jobQueue = new JobQueue();
+		jobQueue = new JobQueue();
 
 		// Set the current world to be this world.
 		// TODO: Do we need to do any cleanup of the old world?
@@ -179,18 +162,35 @@ public class World : IXmlSerializable {
 		furnitureJobPrototypes[f.objectType] = j;
 	}
 
+	void LoadFurnitureLua() {
+		string filePath = System.IO.Path.Combine( Application.streamingAssetsPath, "LUA" );
+		filePath = System.IO.Path.Combine( filePath, "Furniture.lua" );
+		string myLuaCode = System.IO.File.ReadAllText( filePath );
+
+		//Debug.Log("My LUA Code");
+		//Debug.Log(myLuaCode);
+
+		// Instantiate the singleton
+		new FurnitureActions( myLuaCode );
+
+	}
+
 	void CreateFurniturePrototypes() {
+		LoadFurnitureLua();
+
+
 		furniturePrototypes = new Dictionary<string, Furniture>();
 		furnitureJobPrototypes = new Dictionary<string, Job>();
 
 		// READ FURNITURE PROTOTYPE XML FILE HERE
-		// In the future, instead of using the Unity Resources system,
-		// we will be reading from a regular file on the hard drive -- and
-		// hopefully we'll just get passed some kind of data stream instead
-		// of hard-coding in a path here.
-		TextAsset furnText = Resources.Load<TextAsset>("Data/Furniture");
+		// TODO:  Probably we should be getting past a StreamIO handle or the raw
+		// text here, rather than opening the file ourselves.
 
-		XmlTextReader reader = new XmlTextReader( new StringReader( furnText.text ) );
+		string filePath = System.IO.Path.Combine( Application.streamingAssetsPath, "Data" );
+		filePath = System.IO.Path.Combine( filePath, "Furniture.xml" );
+		string furnitureXmlText = System.IO.File.ReadAllText( filePath );
+
+		XmlTextReader reader = new XmlTextReader( new StringReader( furnitureXmlText ) );
 
 		int furnCount = 0;
 		if(reader.ReadToDescendant("Furnitures")) {

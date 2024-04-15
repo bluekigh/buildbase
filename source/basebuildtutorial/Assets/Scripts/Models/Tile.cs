@@ -9,6 +9,7 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using MoonSharp.Interpreter;
 
 
 // TileType is the base type of the tile. In some tile-based games, that might be
@@ -19,6 +20,7 @@ public enum TileType { Empty, Floor };
 
 public enum ENTERABILITY { Yes, Never, Soon };
 
+[MoonSharpUserData]
 public class Tile :IXmlSerializable {
 	private TileType _type = TileType.Empty;
 	public TileType Type {
@@ -253,8 +255,8 @@ public class Tile :IXmlSerializable {
 			return ENTERABILITY.Never;
 
 		// Check out furniture to see if it has a special block on enterability
-		if(furniture != null && furniture.IsEnterable != null) {
-			return furniture.IsEnterable(furniture);
+		if(furniture != null) {
+			return furniture.IsEnterable();
 		}
 
 		return ENTERABILITY.Yes;
