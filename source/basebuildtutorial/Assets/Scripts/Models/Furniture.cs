@@ -309,6 +309,33 @@ public class Furniture : IXmlSerializable {
 					reader.Read();
 					roomEnclosure = reader.ReadContentAsBoolean();
 					break;
+				case "BuildingJob":
+					float jobTime = float.Parse( reader.GetAttribute("jobTime") );
+
+					List<Inventory> invs = new List<Inventory>();
+
+					XmlReader invs_reader = reader.ReadSubtree();
+
+					while(invs_reader.Read()) {
+						if(invs_reader.Name == "Inventory") {
+							// Found an inventory requirement, so add it to the list!
+							invs.Add(new Inventory( 
+								invs_reader.GetAttribute("objectType"),
+								int.Parse( invs_reader.GetAttribute("amount") ),
+								0
+							));
+						}
+					}
+
+					Job j = new Job( null, 
+						objectType, 
+						FurnitureActions.JobComplete_FurnitureBuilding, jobTime, 
+						invs.ToArray()
+					);
+
+					World.current.SetFurnitureJobPrototype(j, this);
+
+					break;
 				case "Params":
 					ReadXmlParams(reader);	// Read in the Param tag
 					break;

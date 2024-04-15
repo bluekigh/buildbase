@@ -157,6 +157,10 @@ public class World : IXmlSerializable {
 		return c;
 	}
 
+	public void SetFurnitureJobPrototype(Job j, Furniture f) {
+		furnitureJobPrototypes[f.objectType] = j;
+	}
+
 	void CreateFurniturePrototypes() {
 		furniturePrototypes = new Dictionary<string, Furniture>();
 		furnitureJobPrototypes = new Dictionary<string, Job>();
@@ -180,6 +184,8 @@ public class World : IXmlSerializable {
 					furn.ReadXmlPrototype(reader);
 
 					furniturePrototypes[furn.objectType] = furn;
+
+
 
 				} while (reader.ReadToNextSibling("Furniture"));
 			}
@@ -559,7 +565,7 @@ public class World : IXmlSerializable {
 
 		// DEBUGGING ONLY!  REMOVE ME LATER!
 		// Create an Inventory Item
-/*		Inventory inv = new Inventory("Steel Plate", 50, 50);
+		Inventory inv = new Inventory("Steel Plate", 50, 50);
 		Tile t = GetTileAt(Width/2, Height/2);
 		inventoryManager.PlaceInventory( t, inv );
 		if(cbInventoryCreated != null) {
@@ -579,7 +585,7 @@ public class World : IXmlSerializable {
 		if(cbInventoryCreated != null) {
 			cbInventoryCreated( t.inventory );
 		}
-*/	}
+	}
 
 	void ReadXml_Tiles(XmlReader reader) {
 		Debug.Log("ReadXml_Tiles");
