@@ -222,6 +222,22 @@ public class World : IXmlSerializable {
 
 
 
+		furniturePrototypes.Add("Mining Drone Station", 
+			new Furniture(
+				"Mining Drone Station",
+				1,	// Pathfinding cost
+				3,  // Width			
+				3,  // Height		// TODO: In the future, the mining drone station will be a 3x2 object with an offset work spot
+				false, // Links to neighbours and "sort of" becomes part of a large object
+				false  // Enclose rooms
+			)
+		);
+		furniturePrototypes["Mining Drone Station"].jobSpotOffset = new Vector2( 1, 0 );
+
+		furniturePrototypes["Mining Drone Station"].RegisterUpdateAction( FurnitureActions.MiningDroneStation_UpdateAction );
+
+
+
 	}
 
 	/// <summary>

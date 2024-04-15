@@ -13,12 +13,18 @@ using System.Xml.Serialization;
 public class Character : IXmlSerializable{
 	public float X {
 		get {
+			if(nextTile == null)
+				return currTile.X;
+			
 			return Mathf.Lerp( currTile.X, nextTile.X, movementPercentage );
 		}
 	}
 
 	public float Y {
 		get {
+			if(nextTile == null)
+				return currTile.Y;
+			
 			return Mathf.Lerp( currTile.Y, nextTile.Y, movementPercentage );
 		}
 	}

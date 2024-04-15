@@ -135,7 +135,7 @@ public static class FurnitureActions {
 
 	static void Stockpile_JobWorked(Job j) {
 		Debug.Log("Stockpile_JobWorked");
-		j.tile.furniture.RemoveJob(j);
+		j.furniture.RemoveJob(j);
 
 		// TODO: Change this when we figure out what we're doing for the all/any pickup job.
 		foreach(Inventory inv in j.inventoryRequirements.Values) {
@@ -158,5 +158,37 @@ public static class FurnitureActions {
 			// TODO: Stand-by electric usage?
 		}
 	}
+
+	public static void MiningDroneStation_UpdateAction(Furniture furn, float deltaTime) {
+
+		if( furn.JobCount() > 0 ) {
+			// We already have a job, so nothing to do.
+			return;
+		}
+
+		Tile jobSpot = furn.GetJobSpotTile();
+
+		if( jobSpot.inventory != null && (jobSpot.inventory.stackSize >= jobSpot.inventory.maxStackSize) ) {
+			// Our drop spot is already full, so don't create a job.
+			return;
+		}
+
+		Job j = new Job(
+			jobSpot,
+			null,
+			MiningDroneStation_JobComplete,
+			1f,
+			null
+		);
+
+		furn.AddJob( j );
+	}
+
+	public static void MiningDroneStation_JobComplete(Job j) {
+		j.tile.world.inventoryManager.PlaceInventory( j.tile, new Inventory("Steel Plate", 50, 2) );
+
+		j.furniture.RemoveJob(j);
+	}
+
 
 }

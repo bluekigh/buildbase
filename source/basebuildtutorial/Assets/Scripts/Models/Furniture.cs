@@ -32,6 +32,13 @@ public class Furniture : IXmlSerializable {
 
 	List<Job> jobs;
 
+	// If this furniture gets worked by a person,
+	// where is the correct spot for them to stand,
+	// relative to the bottom-left tile of the sprite.
+	// NOTE: This could even be something outside of the actual
+	// furniture tile itself!  (In fact, this will probably be common).
+	public Vector2 jobSpotOffset = Vector2.zero;
+
 	public void Update(float deltaTime) {
 		if(updateActions != null) {
 			updateActions(this, deltaTime);
@@ -92,6 +99,8 @@ public class Furniture : IXmlSerializable {
 		this.Height = other.Height;
 		this.tint = other.tint;
 		this.linksToNeighbour = other.linksToNeighbour;
+
+		this.jobSpotOffset = other.jobSpotOffset;
 
 		this.furnParameters = new Dictionary<string, float>(other.furnParameters);
 		jobs = new List<Job>();
@@ -305,6 +314,7 @@ public class Furniture : IXmlSerializable {
 	}
 
 	public void AddJob(Job j) {
+		j.furniture = this;
 		jobs.Add(j);
 		tile.world.jobQueue.Enqueue(j);
 	}
@@ -312,6 +322,7 @@ public class Furniture : IXmlSerializable {
 	public void RemoveJob(Job j) {
 		jobs.Remove(j);
 		j.CancelJob();
+		j.furniture = null;
 		tile.world.jobQueue.Remove(j);
 	}
 
@@ -343,6 +354,10 @@ public class Furniture : IXmlSerializable {
 		// At this point, no DATA structures should be pointing to us, so we
 		// should get garbage-collected.
 
+	}
+
+	public Tile GetJobSpotTile() {
+		return tile.world.GetTileAt( tile.X + (int)jobSpotOffset.x, tile.Y + (int)jobSpotOffset.y );
 	}
 
 }
