@@ -33,7 +33,7 @@ public class Room {
 
 	public void ReturnTilesToOutsideRoom() {
 		for (int i = 0; i < tiles.Count; i++) {
-			tiles[i].room = tiles[i].world.GetOutsideRoom();	// Assign to outside
+			tiles[i].room = World.current.GetOutsideRoom();	// Assign to outside
 		}
 		tiles = new List<Tile>();
 	}
@@ -91,7 +91,7 @@ public class Room {
 		// Check the NESW neighbours of the furniture's tile
 		// and do flood fill from them
 
-		World world = sourceTile.world;
+		World world = World.current;
 
 		Room oldRoom = sourceTile.room;
 
@@ -139,7 +139,7 @@ public class Room {
 	}
 
 	protected static void ActualFloodFill(Tile tile, Room oldRoom) {
-		Debug.Log("ActualFloodFill");
+		//Debug.Log("ActualFloodFill");
 
 		if(tile == null) {
 			// We are trying to flood fill off the map, so just return
@@ -168,7 +168,7 @@ public class Room {
 
 		// If we get to this point, then we know that we need to create a new room.
 
-		Room newRoom = new Room(tile.world);
+		Room newRoom = new Room(World.current);
 		Queue<Tile> tilesToCheck = new Queue<Tile>();
 		tilesToCheck.Enqueue(tile);
 
@@ -238,7 +238,7 @@ public class Room {
 		}
 
 		// Tell the world that a new room has been formed.
-		tile.world.AddRoom(newRoom);
+		World.current.AddRoom(newRoom);
 	}
 
 	void CopyGas(Room other) {

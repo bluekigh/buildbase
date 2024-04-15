@@ -140,7 +140,7 @@ public static class FurnitureActions {
 		// TODO: Change this when we figure out what we're doing for the all/any pickup job.
 		foreach(Inventory inv in j.inventoryRequirements.Values) {
 			if(inv.stackSize > 0) {
-				j.tile.world.inventoryManager.PlaceInventory(j.tile, inv);
+				World.current.inventoryManager.PlaceInventory(j.tile, inv);
 
 				return;  // There should be no way that we ever end up with more than on inventory requirement with stackSize > 0
 			}
@@ -185,7 +185,7 @@ public static class FurnitureActions {
 	}
 
 	public static void MiningDroneStation_JobComplete(Job j) {
-		j.tile.world.inventoryManager.PlaceInventory( j.tile, new Inventory("Steel Plate", 50, 2) );
+		World.current.inventoryManager.PlaceInventory( j.tile, new Inventory("Steel Plate", 50, 2) );
 
 		j.furniture.RemoveJob(j);
 	}

@@ -48,7 +48,7 @@ public class InventorySpriteController : MonoBehaviour {
 	}
 
 	public void OnInventoryCreated( Inventory inv ) {
-		Debug.Log("OnInventoryCreated");
+		//Debug.Log("OnInventoryCreated");
 		// Create a visual GameObject linked to this data.
 
 		// FIXME: Does not consider multi-tile objects nor rotated objects

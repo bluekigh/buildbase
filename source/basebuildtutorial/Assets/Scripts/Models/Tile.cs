@@ -48,9 +48,6 @@ public class Tile :IXmlSerializable {
 	// on a tile.  This is going to be prone to errors in set/clear.
 	public Job pendingFurnitureJob;
 
-	// We need to know the context in which we exist. Probably. Maybe.
-	public World world { get; protected set; }
-
 	public int X { get; protected set; }
 	public int Y { get; protected set; }
 
@@ -77,11 +74,10 @@ public class Tile :IXmlSerializable {
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Tile"/> class.
 	/// </summary>
-	/// <param name="world">A World instance.</param>
+	/// <param name="World.current">A World.current instance.</param>
 	/// <param name="x">The x coordinate.</param>
 	/// <param name="y">The y coordinate.</param>
-	public Tile( World world, int x, int y ) {
-		this.world = world;
+	public Tile( int x, int y ) {
 		this.X = x;
 		this.Y = y;
 	}
@@ -111,7 +107,7 @@ public class Tile :IXmlSerializable {
 		for (int x_off = X; x_off < (X + f.Width); x_off++) {
 			for (int y_off = Y; y_off < (Y + f.Height); y_off++) {
 
-				Tile t = world.GetTileAt(x_off, y_off);
+				Tile t = World.current.GetTileAt(x_off, y_off);
 				t.furniture = null;
 			}
 		}
@@ -133,7 +129,7 @@ public class Tile :IXmlSerializable {
 		for (int x_off = X; x_off < (X + objInstance.Width); x_off++) {
 			for (int y_off = Y; y_off < (Y + objInstance.Height); y_off++) {
 
-				Tile t = world.GetTileAt(x_off, y_off);
+				Tile t = World.current.GetTileAt(x_off, y_off);
 				t.furniture = objInstance;
 
 			}
@@ -206,23 +202,23 @@ public class Tile :IXmlSerializable {
 
 		Tile n;
 
-		n = world.GetTileAt(X, Y+1);
+		n = World.current.GetTileAt(X, Y+1);
 		ns[0] = n;	// Could be null, but that's okay.
-		n = world.GetTileAt(X+1, Y);
+		n = World.current.GetTileAt(X+1, Y);
 		ns[1] = n;	// Could be null, but that's okay.
-		n = world.GetTileAt(X, Y-1);
+		n = World.current.GetTileAt(X, Y-1);
 		ns[2] = n;	// Could be null, but that's okay.
-		n = world.GetTileAt(X-1, Y);
+		n = World.current.GetTileAt(X-1, Y);
 		ns[3] = n;	// Could be null, but that's okay.
 
 		if(diagOkay == true) {
-			n = world.GetTileAt(X+1, Y+1);
+			n = World.current.GetTileAt(X+1, Y+1);
 			ns[4] = n;	// Could be null, but that's okay.
-			n = world.GetTileAt(X+1, Y-1);
+			n = World.current.GetTileAt(X+1, Y-1);
 			ns[5] = n;	// Could be null, but that's okay.
-			n = world.GetTileAt(X-1, Y-1);
+			n = World.current.GetTileAt(X-1, Y-1);
 			ns[6] = n;	// Could be null, but that's okay.
-			n = world.GetTileAt(X-1, Y+1);
+			n = World.current.GetTileAt(X-1, Y+1);
 			ns[7] = n;	// Could be null, but that's okay.
 		}
 
@@ -258,15 +254,15 @@ public class Tile :IXmlSerializable {
 	}
 
 	public Tile North() {
-		return world.GetTileAt(X, Y + 1);
+		return World.current.GetTileAt(X, Y + 1);
 	}
 	public Tile South() {
-		return world.GetTileAt(X, Y - 1);
+		return World.current.GetTileAt(X, Y - 1);
 	}
 	public Tile East() {
-		return world.GetTileAt(X + 1, Y);
+		return World.current.GetTileAt(X + 1, Y);
 	}
 	public Tile West() {
-		return world.GetTileAt(X - 1, Y);
+		return World.current.GetTileAt(X - 1, Y);
 	}
 }

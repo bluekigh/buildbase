@@ -202,7 +202,7 @@ public class MouseController : MonoBehaviour {
 			sr.color = new Color( 1f, 0.5f, 0.5f, 0.25f );
 		}
 
-		Furniture proto = t.world.furniturePrototypes[furnitureType];
+		Furniture proto = World.current.furniturePrototypes[furnitureType];
 
 		go.transform.position = new Vector3( t.X + (( proto.Width-1 )/2f), t.Y + (( proto.Height-1 )/2f), 0);
 

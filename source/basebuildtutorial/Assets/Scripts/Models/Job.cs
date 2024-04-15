@@ -122,7 +122,7 @@ public class Job {
 		if(cbJobCancel != null)
 			cbJobCancel(this);	
 
-		tile.world.jobQueue.Remove(this);
+		World.current.jobQueue.Remove(this);
 	}
 
 	public bool HasAllMaterial() {
