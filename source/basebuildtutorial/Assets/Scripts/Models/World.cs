@@ -102,7 +102,25 @@ public class World : IXmlSerializable {
 	}
 
 	void SetupWorld(int width, int height) {
-		jobQueue = new JobQueue();
+
+/*		string myLuaCode;
+
+		// Read the lua code from the file
+		TextAsset ta = Resources.Load<TextAsset>("LUA/Furniture");
+
+		if(ta == null) {
+			Debug.LogError("Failed to load LUA code text asset!!");
+			return;
+		}
+
+		myLuaCode = ta.text;
+
+		Debug.Log("My LUA Code");
+		Debug.Log(myLuaCode);
+
+		FurnitureActions fa = new FurnitureActions( myLuaCode );
+
+*/		jobQueue = new JobQueue();
 
 		// Set the current world to be this world.
 		// TODO: Do we need to do any cleanup of the old world?

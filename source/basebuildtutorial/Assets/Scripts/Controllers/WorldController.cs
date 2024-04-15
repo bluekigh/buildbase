@@ -34,6 +34,7 @@ public class WorldController : MonoBehaviour {
 		else {
 			CreateEmptyWorld();
 		}
+
 	}
 
 	void Update() {

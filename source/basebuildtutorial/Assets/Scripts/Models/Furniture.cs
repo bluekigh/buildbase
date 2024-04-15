@@ -276,7 +276,7 @@ public class Furniture : IXmlSerializable {
 	}
 
 	public void ReadXmlPrototype(XmlReader reader_parent) {
-		Debug.Log("ReadXmlPrototype");
+		//Debug.Log("ReadXmlPrototype");
 
 		objectType = reader_parent.GetAttribute("objectType");
 
@@ -334,6 +334,12 @@ public class Furniture : IXmlSerializable {
 					);
 
 					World.current.SetFurnitureJobPrototype(j, this);
+
+					break;
+				case "OnUpdate":
+
+					//string functionName = reader.GetAttribute("FunctionName");
+					//RegisterUpdateAction( StringToFunction( functionName ) );
 
 					break;
 				case "Params":

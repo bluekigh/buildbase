@@ -1,11 +1,58 @@
 ﻿using UnityEngine;
 using System.Collections;
+using MoonSharp.Interpreter;
 
-public static class FurnitureActions {
+
+public class FurnitureActions {
+
+	public FurnitureActions( string rawLuaCode ) {
+
+		Script myLuaScript = new Script();
+		DynValue result = myLuaScript.DoString( rawLuaCode );
+
+		if(result.Type == DataType.Number) 
+			Debug.Log( result.Number );
+		else 
+			Debug.Log( result.String );
+
+		result = myLuaScript.Call( myLuaScript.Globals["test"], 111 );
+
+		if(result.Type == DataType.Number) 
+			Debug.Log( result.Number );
+		else 
+			Debug.Log( result.String );
+
+	}
+
+
+
+
+
+
+
+
+	public static void JobComplete_FurnitureBuilding(Job theJob) {
+		WorldController.Instance.world.PlaceFurniture( theJob.jobObjectType, theJob.tile );
+
+		// FIXME: I don't like having to manually and explicitly set
+		// flags that preven conflicts. It's too easy to forget to set/clear them!
+		theJob.tile.pendingFurnitureJob = null;
+	}
+
+
+
+
+
+
+
+
+
 	// This file contains code which will likely be completely moved to
 	// some LUA files later on and will be parsed at run-time.
 
-	public static void Door_UpdateAction(Furniture furn, float deltaTime) {
+
+
+/*	public static void Door_UpdateAction(Furniture furn, float deltaTime) {
 		//Debug.Log("Door_UpdateAction: " + furn.furnParameters["openness"]);
 
 		if(furn.GetParameter("is_opening") >= 1) {
@@ -34,14 +81,6 @@ public static class FurnitureActions {
 		}
 
 		return ENTERABILITY.Soon;
-	}
-
-	public static void JobComplete_FurnitureBuilding(Job theJob) {
-		WorldController.Instance.world.PlaceFurniture( theJob.jobObjectType, theJob.tile );
-
-		// FIXME: I don't like having to manually and explicitly set
-		// flags that preven conflicts. It's too easy to forget to set/clear them!
-		theJob.tile.pendingFurnitureJob = null;
 	}
 
 	public static Inventory[] Stockpile_GetItemsFromFilter() {
@@ -213,6 +252,6 @@ public static class FurnitureActions {
 		World.current.inventoryManager.PlaceInventory( j.furniture.GetSpawnSpotTile(), new Inventory("Steel Plate", 50, 20) );
 
 	}
-
+*/
 
 }
