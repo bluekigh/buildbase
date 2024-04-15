@@ -156,15 +156,30 @@ public class World : IXmlSerializable {
 	}
 
 	void CreateFurniturePrototypes() {
+		furniturePrototypes = new Dictionary<string, Furniture>();
+		furnitureJobPrototypes = new Dictionary<string, Job>();
+
+		// READ FURNITURE PROTOTYPE XML FILE HERE
+
+
+		// This bit will come from parsing a LUA file later, but for now we still need to
+		// implement furniture behaviour directly in C# code.
+		//furniturePrototypes["Door"].RegisterUpdateAction( FurnitureActions.Door_UpdateAction );
+		//furniturePrototypes["Door"].IsEnterable = FurnitureActions.Door_IsEnterable;
+
+	}
+
+
+/*	void CreateFurniturePrototypes() {
 		// This will be replaced by a function that reads all of our furniture data
 		// from a text file in the future.
 
 		furniturePrototypes = new Dictionary<string, Furniture>();
 		furnitureJobPrototypes = new Dictionary<string, Job>();
 
-		furniturePrototypes.Add("Wall", 
+		furniturePrototypes.Add("furn_SteelWall", 
 			new Furniture(
-				"Wall",
+				"furn_SteelWall",
 				0,	// Impassable
 				1,  // Width
 				1,  // Height
@@ -172,9 +187,10 @@ public class World : IXmlSerializable {
 				true  // Enclose rooms
 			)
 		);
-		furnitureJobPrototypes.Add("Wall",
+		furniturePrototypes["furn_SteelWall"].Name = "Basic Wall";
+		furnitureJobPrototypes.Add("furn_SteelWall",
 			new Job( null, 
-				"Wall", 
+				"furn_SteelWall", 
 				FurnitureActions.JobComplete_FurnitureBuilding, 1f, 
 				new Inventory[]{ new Inventory("Steel Plate", 5, 0) } 
 			)
@@ -256,6 +272,7 @@ public class World : IXmlSerializable {
 
 
 	}
+*/
 
 	/// <summary>
 	/// A function for testing out the system
@@ -291,7 +308,7 @@ public class World : IXmlSerializable {
 
 				if(x == l || x == (l + 9) || y == b || y == (b + 9)) {
 					if(x != (l + 9) && y != (b + 4)) {
-						PlaceFurniture("Wall", tiles[x,y]);
+						PlaceFurniture("furn_SteelWall", tiles[x,y]);
 					}
 				}
 
@@ -478,7 +495,8 @@ public class World : IXmlSerializable {
 		writer.WriteValue(Width);
 		writer.WriteEndElement();
 */
-	
+
+		//Debug.Log(writer.ToString());
 	
 	}
 

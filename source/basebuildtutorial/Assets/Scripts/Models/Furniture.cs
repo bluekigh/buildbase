@@ -59,6 +59,19 @@ public class Furniture : IXmlSerializable {
 		get; protected set;
 	}
 
+	private string _Name = null;
+	public string Name {
+		get {
+			if( _Name == null || _Name.Length == 0) {
+				return objectType;
+			}
+			return _Name;
+		}
+		set {
+			_Name = value;
+		}
+	}
+
 	// This is a multipler. So a value of "2" here, means you move twice as slowly (i.e. at half speed)
 	// Tile types and other environmental effects may be combined.
 	// For example, a "rough" tile (cost of 2) with a table (cost of 3) that is on fire (cost of 3)
@@ -96,6 +109,7 @@ public class Furniture : IXmlSerializable {
 	// do ANY sub-classing. Instead use Clone(), which is more virtual.
 	protected Furniture( Furniture other ) {
 		this.objectType = other.objectType;
+		this.Name = other.Name;
 		this.movementCost = other.movementCost;
 		this.roomEnclosure = other.roomEnclosure;
 		this.Width = other.Width;
@@ -260,7 +274,22 @@ public class Furniture : IXmlSerializable {
 
 	}
 
+	public void ReadXmlPrototype(XmlReader reader) {
+
+
+		ReadXmlParams(reader);	// Read in the Param tag
+	}
+
 	public void ReadXml(XmlReader reader) {
+		// X, Y, and objectType have already been set, and we should already
+		// be assigned to a tile.  So just read extra data.
+
+		//movementCost = int.Parse( reader.GetAttribute("movementCost") );
+
+		ReadXmlParams(reader);
+	}
+
+	public void ReadXmlParams(XmlReader reader) {
 		// X, Y, and objectType have already been set, and we should already
 		// be assigned to a tile.  So just read extra data.
 
