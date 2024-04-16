@@ -80,7 +80,7 @@ public class FurnitureActions {
 	}
 
 	static public DynValue CallFunction(string functionName, params object[] args) {
-		Debug.Log("Calling function: " + functionName);
+		//Debug.Log("Calling function: " + functionName);
 		object func = _Instance.myLuaScript.Globals[functionName];
 
 		return _Instance.myLuaScript.Call( func, args );

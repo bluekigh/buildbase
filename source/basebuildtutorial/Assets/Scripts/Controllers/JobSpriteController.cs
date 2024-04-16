@@ -60,7 +60,7 @@ public class JobSpriteController : MonoBehaviour {
 			Tile southTile = World.current.GetTileAt( job.tile.X, job.tile.Y - 1 );
 
 			if(northTile != null && southTile != null && northTile.furniture != null && southTile.furniture != null &&
-				northTile.furniture.objectType=="Wall" && southTile.furniture.objectType=="Wall") {
+				northTile.furniture.objectType.Contains("Wall") && southTile.furniture.objectType.Contains("Wall")) {
 				job_go.transform.rotation = Quaternion.Euler( 0, 0, 90 );
 			}
 		}
