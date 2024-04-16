@@ -6,11 +6,14 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using MoonSharp.Interpreter;
+
 
 // Inventory are things that are lying on the floor/stockpile, like a bunch of metal bars
 // or potentially a non-installed copy of furniture (e.g. a cabinet still in the box from Ikea)
 
 
+[MoonSharpUserData]
 public class Inventory {
 	public string objectType = "Steel Plate";
 	public int maxStackSize = 50;
@@ -36,6 +39,10 @@ public class Inventory {
 
 	public Inventory() {
 		
+	}
+
+	static public Inventory New(string objectType, int maxStackSize, int stackSize) {
+		return new Inventory(objectType, maxStackSize, stackSize);
 	}
 
 	public Inventory(string objectType, int maxStackSize, int stackSize) {

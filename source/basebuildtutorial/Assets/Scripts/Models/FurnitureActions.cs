@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Debugging;
+using MoonSharp.RemoteDebugger;
+using MoonSharp.RemoteDebugger.Network;
 
 
 public class FurnitureActions {
@@ -17,9 +20,46 @@ public class FurnitureActions {
 		_Instance = this;
 
 		myLuaScript = new Script();
+
+		// If we want to be able to instantiate a new object of a class
+		//   i.e. by doing    SomeClass.__new()
+		// We need to make the base type visible.
+		myLuaScript.Globals["Inventory"] = typeof(Inventory);
+		myLuaScript.Globals["Job"] = typeof(Job);
+
+		// Also to access statics/globals
+		myLuaScript.Globals["World"] = typeof(World);
+
+		//ActivateRemoteDebugger(myLuaScript);
 		myLuaScript.DoString( rawLuaCode );
+	}
+
+	static RemoteDebuggerService remoteDebugger;
+
+	private void ActivateRemoteDebugger(Script script)
+	{
+		if (remoteDebugger == null)
+		{
+			remoteDebugger = new RemoteDebuggerService( new RemoteDebuggerOptions()
+				{
+					NetworkOptions = Utf8TcpServerOptions.LocalHostOnly | Utf8TcpServerOptions.SingleClientOnly,
+					SingleScriptMode = true,
+					HttpPort = 2705,
+					RpcPortBase = 2006,
+				} );
+
+			// the last boolean is to specify if the script is free to run 
+			// after attachment, defaults to false
+			remoteDebugger.Attach(script, "My Awesome Debugger", true);
+
+			// start the web-browser at the correct url. Replace this or just
+			// pass the url to the user in some way.
+			System.Diagnostics.Process.Start(remoteDebugger.HttpUrlStringLocalHost);
+
+		}
 
 	}
+
 
 
 	static public void CallFunctionsWithFurniture(string[] functionNames, Furniture furn, float deltaTime) {
@@ -40,6 +80,7 @@ public class FurnitureActions {
 	}
 
 	static public DynValue CallFunction(string functionName, params object[] args) {
+		Debug.Log("Calling function: " + functionName);
 		object func = _Instance.myLuaScript.Globals[functionName];
 
 		return _Instance.myLuaScript.Call( func, args );

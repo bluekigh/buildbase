@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: e02bb32d039f86a4ea2cd49e96e9ff91
-timeCreated: 1461691732
+timeCreated: 1467401274
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -82,10 +82,6 @@ TextureImporter:
         - {x: -16, y: -16}
         - {x: 16, y: -16}
         - {x: 16, y: 16}
-      - - {x: -11, y: 11}
-        - {x: 11, y: 11}
-        - {x: 11, y: -11}
-        - {x: -11, y: -11}
     - name: Stockpile_ES
       rect:
         serializedVersion: 2
@@ -99,14 +95,8 @@ TextureImporter:
       outline:
       - - {x: -16, y: 16}
         - {x: -16, y: -16}
-        - {x: -12, y: -16}
-        - {x: 16, y: 12}
-        - {x: 16, y: 16}
-      - - {x: 12, y: -14}
-        - {x: 12, y: -16}
         - {x: 16, y: -16}
-        - {x: 16, y: -12}
-        - {x: 14, y: -12}
+        - {x: 16, y: 16}
     - name: Stockpile_E
       rect:
         serializedVersion: 2
@@ -163,19 +153,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -12, y: -16}
-        - {x: -12, y: 16}
-        - {x: -16, y: 16}
+      - - {x: -16, y: 16}
         - {x: -16, y: -16}
-      - - {x: 12, y: -14}
-        - {x: 12, y: -16}
         - {x: 16, y: -16}
-        - {x: 16, y: -12}
-        - {x: 14, y: -12}
-      - - {x: 12, y: 16}
-        - {x: 12, y: 14}
-        - {x: 14, y: 12}
-        - {x: 16, y: 12}
         - {x: 16, y: 16}
     - name: Stockpile_EW
       rect:
@@ -188,13 +168,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -16, y: -16}
-        - {x: 16, y: -16}
-        - {x: 16, y: -12}
-        - {x: -16, y: -12}
       - - {x: -16, y: 16}
-        - {x: -16, y: 12}
-        - {x: 16, y: 12}
+        - {x: -16, y: -16}
+        - {x: 16, y: -16}
         - {x: 16, y: 16}
     - name: Stockpile_SW
       rect:
@@ -207,14 +183,8 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -16, y: -16}
-        - {x: -12, y: -16}
-        - {x: -12, y: -14}
-        - {x: -14, y: -12}
-        - {x: -16, y: -12}
       - - {x: -16, y: 16}
-        - {x: -16, y: 12}
-        - {x: 12, y: -16}
+        - {x: -16, y: -16}
         - {x: 16, y: -16}
         - {x: 16, y: 16}
     - name: Stockpile_NS
@@ -228,12 +198,8 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -12, y: -16}
-        - {x: -12, y: 16}
-        - {x: -16, y: 16}
+      - - {x: -16, y: 16}
         - {x: -16, y: -16}
-      - - {x: 12, y: 16}
-        - {x: 12, y: -16}
         - {x: 16, y: -16}
         - {x: 16, y: 16}
     - name: Stockpile_NW
@@ -247,16 +213,10 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: 12, y: 16}
-        - {x: -16, y: -12}
+      - - {x: -16, y: 16}
         - {x: -16, y: -16}
         - {x: 16, y: -16}
         - {x: 16, y: 16}
-      - - {x: -16, y: 16}
-        - {x: -16, y: 12}
-        - {x: -14, y: 12}
-        - {x: -12, y: 14}
-        - {x: -12, y: 16}
     - name: Stockpile_NE
       rect:
         serializedVersion: 2
@@ -271,12 +231,6 @@ TextureImporter:
       - - {x: -16, y: 16}
         - {x: -16, y: -16}
         - {x: 16, y: -16}
-        - {x: 16, y: -12}
-        - {x: -12, y: 16}
-      - - {x: 12, y: 16}
-        - {x: 12, y: 14}
-        - {x: 14, y: 12}
-        - {x: 16, y: 12}
         - {x: 16, y: 16}
     - name: Stockpile_W
       rect:
@@ -304,19 +258,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -16, y: -16}
-        - {x: 16, y: -16}
-        - {x: 16, y: -12}
-        - {x: -16, y: -12}
       - - {x: -16, y: 16}
-        - {x: -16, y: 12}
-        - {x: -14, y: 12}
-        - {x: -12, y: 14}
-        - {x: -12, y: 16}
-      - - {x: 12, y: 16}
-        - {x: 12, y: 14}
-        - {x: 14, y: 12}
-        - {x: 16, y: 12}
+        - {x: -16, y: -16}
+        - {x: 16, y: -16}
         - {x: 16, y: 16}
     - name: Stockpile_NSW
       rect:
@@ -329,20 +273,10 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -16, y: -16}
-        - {x: -12, y: -16}
-        - {x: -12, y: -14}
-        - {x: -14, y: -12}
-        - {x: -16, y: -12}
-      - - {x: 12, y: 16}
-        - {x: 12, y: -16}
+      - - {x: -16, y: 16}
+        - {x: -16, y: -16}
         - {x: 16, y: -16}
         - {x: 16, y: 16}
-      - - {x: -16, y: 16}
-        - {x: -16, y: 12}
-        - {x: -14, y: 12}
-        - {x: -12, y: 14}
-        - {x: -12, y: 16}
     - name: Stockpile_NESW
       rect:
         serializedVersion: 2
@@ -354,25 +288,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -16, y: -16}
-        - {x: -12, y: -16}
-        - {x: -12, y: -14}
-        - {x: -14, y: -12}
-        - {x: -16, y: -12}
-      - - {x: 12, y: -14}
-        - {x: 12, y: -16}
-        - {x: 16, y: -16}
-        - {x: 16, y: -12}
-        - {x: 14, y: -12}
       - - {x: -16, y: 16}
-        - {x: -16, y: 12}
-        - {x: -14, y: 12}
-        - {x: -12, y: 14}
-        - {x: -12, y: 16}
-      - - {x: 12, y: 16}
-        - {x: 12, y: 14}
-        - {x: 14, y: 12}
-        - {x: 16, y: 12}
+        - {x: -16, y: -16}
+        - {x: 16, y: -16}
         - {x: 16, y: 16}
     - name: Stockpile_ESW
       rect:
@@ -385,19 +303,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -16, y: -16}
-        - {x: -12, y: -16}
-        - {x: -12, y: -14}
-        - {x: -14, y: -12}
-        - {x: -16, y: -12}
-      - - {x: 12, y: -14}
-        - {x: 12, y: -16}
-        - {x: 16, y: -16}
-        - {x: 16, y: -12}
-        - {x: 14, y: -12}
       - - {x: -16, y: 16}
-        - {x: -16, y: 12}
-        - {x: 16, y: 12}
+        - {x: -16, y: -16}
+        - {x: 16, y: -16}
         - {x: 16, y: 16}
     outline: []
   spritePackingTag: 

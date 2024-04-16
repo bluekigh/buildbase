@@ -125,6 +125,8 @@ public class Furniture : IXmlSerializable {
 		furnParameters = new Dictionary<string, float>();
 		jobs = new List<Job>();
 		this.funcPositionValidation = this.DEFAULT__IsValidPosition;
+		this.Height = 1;
+		this.Width = 1;
 	}
 
 	// Copy Constructor -- don't call this directly, unless we never
@@ -369,6 +371,21 @@ public class Furniture : IXmlSerializable {
 				case "IsEnterable":
 
 					isEnterableAction = reader.GetAttribute("FunctionName");
+
+					break;
+
+				case "JobSpotOffset":
+					jobSpotOffset = new Vector2(
+						int.Parse(reader.GetAttribute("X")),
+						int.Parse(reader.GetAttribute("Y"))
+					);
+
+					break;
+				case "JobSpawnSpotOffset":
+					jobSpawnSpotOffset = new Vector2(
+						int.Parse(reader.GetAttribute("X")),
+						int.Parse(reader.GetAttribute("Y"))
+					);
 
 					break;
 				case "Params":

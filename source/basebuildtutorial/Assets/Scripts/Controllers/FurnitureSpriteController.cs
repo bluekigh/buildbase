@@ -150,7 +150,10 @@ public class FurnitureSpriteController : MonoBehaviour {
 				//Debug.Log(spriteName);
 			}
 
-
+			if(furnitureSprites.ContainsKey(spriteName) == false) {
+				Debug.Log("furnitureSprites has no definition for: " + spriteName);
+				return null;
+			}
 
 			return furnitureSprites[spriteName];
 		}

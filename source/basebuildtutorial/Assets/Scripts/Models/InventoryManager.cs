@@ -5,7 +5,9 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
 
+[MoonSharpUserData]
 public class InventoryManager {
 
 	// This is a list of all "live" inventories.

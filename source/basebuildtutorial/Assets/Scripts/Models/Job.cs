@@ -6,7 +6,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using MoonSharp.Interpreter;
+using System.Linq;
 
+[MoonSharpUserData]
 public class Job {
 
 	// This class holds info for a queued up job, which can include
@@ -34,8 +37,10 @@ public class Job {
 	public bool acceptsAnyInventoryItem = false;
 
 	Action<Job> cbJobCompleted;	// We have finished the work cycle and so things should probably get built or whatever. 
+	List<string> cbJobCompletedLua;
 	Action<Job> cbJobStopped;	// The job has been stopped, either because it's non-repeating or was cancelled.
 	Action<Job> cbJobWorked;	// Gets called each time some work is performed -- maybe update the UI?
+	List<string> cbJobWorkedLua;
 
 	public bool canTakeFromStockpile = true;
 
@@ -47,6 +52,9 @@ public class Job {
 		this.cbJobCompleted += cbJobComplete;
 		this.jobTimeRequired = this.jobTime = jobTime;
 		this.jobRepeats = jobRepeats;
+
+		cbJobWorkedLua = new List<string>();
+		cbJobCompletedLua = new List<string>();
 
 		this.inventoryRequirements = new Dictionary<string, Inventory>();
 		if(inventoryRequirements != null ) {
@@ -62,12 +70,20 @@ public class Job {
 		this.cbJobCompleted = other.cbJobCompleted;
 		this.jobTime = other.jobTime;
 
+		cbJobWorkedLua = new List<string>(other.cbJobWorkedLua);
+		cbJobCompletedLua = new List<string>(other.cbJobWorkedLua);
+
+
 		this.inventoryRequirements = new Dictionary<string, Inventory>();
 		if(inventoryRequirements != null ) {
 			foreach(Inventory inv in other.inventoryRequirements.Values) {
 				this.inventoryRequirements[ inv.objectType ] = inv.Clone();
 			}
 		}
+	}
+
+	public Inventory[] GetInventoryRequirementValues() {
+		return inventoryRequirements.Values.ToArray();
 	}
 
 	virtual public Job Clone() {
@@ -78,12 +94,21 @@ public class Job {
 		cbJobCompleted += cb;
 	}
 
-	public void RegisterJobStoppedCallback(Action<Job> cb) {
-		cbJobStopped += cb;
-	}
-
 	public void UnregisterJobCompletedCallback(Action<Job> cb) {
 		cbJobCompleted -= cb;
+	}
+
+	public void RegisterJobCompletedCallback(string cb) {
+		cbJobCompletedLua.Add(cb);
+	}
+
+	public void UnregisterJobCompletedCallback(string cb) {
+		cbJobCompletedLua.Remove(cb);
+	}
+
+
+	public void RegisterJobStoppedCallback(Action<Job> cb) {
+		cbJobStopped += cb;
 	}
 
 	public void UnregisterJobStoppedCallback(Action<Job> cb) {
@@ -98,6 +123,14 @@ public class Job {
 		cbJobWorked -= cb;
 	}
 
+	public void RegisterJobWorkedCallback(string cb) {
+		cbJobWorkedLua.Add(cb);
+	}
+
+	public void UnregisterJobWorkedCallback(string cb) {
+		cbJobWorkedLua.Remove(cb);
+	}
+
 	public void DoWork(float workTime) {
 		// Check to make sure we actually have everything we need. 
 		// If not, don't register the work time.
@@ -108,6 +141,12 @@ public class Job {
 			// so that animations and whatnot can be updated.
 			if(cbJobWorked != null)
 				cbJobWorked(this);
+
+			if(cbJobWorkedLua != null) {
+				foreach(string luaFunction in cbJobWorkedLua) {
+					FurnitureActions.CallFunction(luaFunction, this);
+				}
+			}
 			
 			return;
 		}
@@ -117,10 +156,20 @@ public class Job {
 		if(cbJobWorked != null)
 			cbJobWorked(this);
 
+		if(cbJobWorkedLua != null) {
+			foreach(string luaFunction in cbJobWorkedLua) {
+				FurnitureActions.CallFunction(luaFunction, this);
+			}
+		}
+
 		if(jobTime <= 0) {
 			// Do whatever is supposed to happen with a job cycle completes.
 			if(cbJobCompleted != null)
 				cbJobCompleted(this);
+
+			foreach(string luaFunc in cbJobCompletedLua) {
+				FurnitureActions.CallFunction(luaFunc, this);
+			}
 
 			if(jobRepeats == false) {
 				// Let everyone know that the job is officially concluded
