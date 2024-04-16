@@ -79,7 +79,7 @@ public class MouseController : MonoBehaviour {
 
 	public class SelectionInfo {
 		public Tile tile;
-		public object[] stuffInTile;
+		public ISelectableInterface[] stuffInTile;
 		public int subSelection = 0;
 	}
 
@@ -144,7 +144,7 @@ public class MouseController : MonoBehaviour {
 	void RebuildSelectionStuffInTile() {
 
 		// Make sure stuffInTile is big enough to handle all the characters, plus the 3 extra values
-		mySelection.stuffInTile =  new object[ mySelection.tile.characters.Count + 3 ] ;
+		mySelection.stuffInTile =  new ISelectableInterface[ mySelection.tile.characters.Count + 3 ] ;
 
 		// Copy the character references
 		for (int i = 0; i < mySelection.tile.characters.Count; i++) {

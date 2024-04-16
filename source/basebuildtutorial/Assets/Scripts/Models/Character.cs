@@ -10,7 +10,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-public class Character : IXmlSerializable{
+public class Character : IXmlSerializable, ISelectableInterface {
 	public float X {
 		get {
 			if(nextTile == null)
@@ -412,6 +412,20 @@ public class Character : IXmlSerializable{
 
 	public void ReadXml(XmlReader reader) {
 	}
+
+	#region ISelectableInterface implementation
+	public string GetName() {
+		return "Sally S. Smith";
+	}
+
+	public string GetDescription() {
+		return "A human astronaut. She is currently depressed because her friend was ejected out of an airlock.";
+	}
+
+	public string GetHitPointString() {
+		return "100/100";
+	}
+	#endregion
 
 
 }

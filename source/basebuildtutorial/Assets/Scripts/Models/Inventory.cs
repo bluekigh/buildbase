@@ -14,7 +14,7 @@ using MoonSharp.Interpreter;
 
 
 [MoonSharpUserData]
-public class Inventory {
+public class Inventory : ISelectableInterface {
 	public string objectType = "Steel Plate";
 	public int maxStackSize = 50;
 
@@ -70,4 +70,17 @@ public class Inventory {
 	}
 
 
+	#region ISelectableInterface implementation
+	public string GetName() {
+		return this.objectType;
+	}
+
+	public string GetDescription() {
+		return "A stack of inventory.";
+	}
+	public string GetHitPointString()
+	{
+		return "";	// Does inventory have hitpoints? How does it get destroyed? Maybe it's just a percentage chance based on damage.
+	}
+	#endregion
 }

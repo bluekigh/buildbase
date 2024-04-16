@@ -21,7 +21,7 @@ public enum TileType { Empty, Floor };
 public enum ENTERABILITY { Yes, Never, Soon };
 
 [MoonSharpUserData]
-public class Tile :IXmlSerializable {
+public class Tile :IXmlSerializable, ISelectableInterface {
 	private TileType _type = TileType.Empty;
 	public TileType Type {
 		get { return _type; }
@@ -277,4 +277,22 @@ public class Tile :IXmlSerializable {
 	public Tile West() {
 		return World.current.GetTileAt(X - 1, Y);
 	}
+
+	#region ISelectableInterface implementation
+
+	public string GetName() {
+		return this._type.ToString();
+	}
+
+	public string GetDescription()
+	{
+		return "The tile.";
+	}
+
+	public string GetHitPointString()
+	{
+		return "";	// Do tiles have hitpoints? Can flooring be damaged? Obviously "empty" is indestructible.
+	}
+
+	#endregion
 }

@@ -15,7 +15,7 @@ using MoonSharp.Interpreter;
 // InstalledObjects are things like walls, doors, and furniture (e.g. a sofa)
 
 [MoonSharpUserData]
-public class Furniture : IXmlSerializable {
+public class Furniture : IXmlSerializable, ISelectableInterface {
 
 	/// <summary>
 	/// Custom parameter for this particular piece of furniture.  We are
@@ -531,4 +531,17 @@ public class Furniture : IXmlSerializable {
 		return World.current.GetTileAt( tile.X + (int)jobSpawnSpotOffset.x, tile.Y + (int)jobSpawnSpotOffset.y );
 	}
 
+	#region ISelectableInterface implementation
+	public string GetName() {
+		return this.Name;
+	}
+
+	public string GetDescription() {
+		return "This is a piece of furniture."; // TODO: Add "Description" property and matching XML field.
+	}
+
+	public string GetHitPointString() {
+		return "18/18";	// TODO: Add a hitpoint system to...well...everything
+	}
+	#endregion
 }
