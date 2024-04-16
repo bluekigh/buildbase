@@ -73,24 +73,16 @@ public class Path_AStar {
 		while( OpenSet.Count > 0 ) {
 			Path_Node<Tile> current = OpenSet.Dequeue();
 
-			if( (goal != null && current == goal) || 
-				(goal == null && current.data.inventory != null && current.data.inventory.objectType == objectType) ) {
-				// We have reached our goal!
-				// Let's convert this into an actual sequene of
-				// tiles to walk on, then end this constructor function!
-				reconstruct_path(Came_From, current);
-				return;
-			}
-
+			// If we have a POSITIONAL goal, check to see if we are there.
 			if(goal != null) {
 				if(current == goal) {
 					reconstruct_path(Came_From, current);
 					return;
 				}
-					
 			}
 			else {
-				// Looking for inventory
+				// We don't have a POSITIONAL goal, we're just trying to find
+				// some king of inventory.  Have we reached it?
 				if( current.data.inventory != null && current.data.inventory.objectType == objectType ) {
 					// Type is correct
 					if( canTakeFromStockpile || current.data.furniture == null || current.data.furniture.IsStockpile() == false ) {

@@ -133,7 +133,7 @@ public class InventoryManager {
 			return null;
 		}
 
-		Path_AStar path = new Path_AStar(World.current, t, null, objectType);
+		Path_AStar path = new Path_AStar(World.current, t, null, objectType, desiredAmount, canTakeFromStockpile);
 
 		return path;
 

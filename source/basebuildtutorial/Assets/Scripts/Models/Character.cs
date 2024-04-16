@@ -173,10 +173,12 @@ public class Character : IXmlSerializable, ISelectableInterface {
 				// At this point, the job still requires inventory, but we aren't carrying it!
 
 				// Are we standing on a tile with goods that are desired by the job?
+				Debug.Log("Standing on Tile check");
 				if(currTile.inventory != null && 
 					( myJob.canTakeFromStockpile || currTile.furniture == null || currTile.furniture.IsStockpile()==false ) &&  
 					myJob.DesiresInventoryType(currTile.inventory) > 0) {
 					// Pick up the stuff!
+					Debug.Log("Pick up the stuff");
 
 					World.current.inventoryManager.PlaceInventory(
 						this, 
@@ -187,6 +189,9 @@ public class Character : IXmlSerializable, ISelectableInterface {
 				}
 				else {
 					// Walk towards a tile containing the required goods.
+					Debug.Log("Walk to the stuff");
+					Debug.Log(myJob.canTakeFromStockpile);
+
 
 					// Find the first thing in the Job that isn't satisfied.
 					Inventory desired = myJob.GetFirstDesiredInventory();
