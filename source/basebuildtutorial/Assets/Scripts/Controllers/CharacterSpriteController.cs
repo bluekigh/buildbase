@@ -5,16 +5,12 @@ public class CharacterSpriteController : MonoBehaviour {
 
 	Dictionary<Character, GameObject> characterGameObjectMap;
 
-	Dictionary<string, Sprite> characterSprites;
-
 	World world {
 		get { return WorldController.Instance.world; }
 	}
 
 	// Use this for initialization
 	void Start () {
-		LoadSprites();
-
 		// Instantiate our dictionary that tracks which GameObject is rendering which Tile data.
 		characterGameObjectMap = new Dictionary<Character, GameObject>();
 
@@ -29,17 +25,6 @@ public class CharacterSpriteController : MonoBehaviour {
 
 
 		//c.SetDestination( world.GetTileAt( world.Width/2 + 5, world.Height/2 ) );
-	}
-
-	void LoadSprites() {
-		characterSprites = new Dictionary<string, Sprite>();
-		Sprite[] sprites = Resources.LoadAll<Sprite>("Images/Characters/");
-
-		//Debug.Log("LOADED RESOURCE:");
-		foreach(Sprite s in sprites) {
-			//Debug.Log(s);
-			characterSprites[s.name] = s;
-		}
 	}
 
 	public void OnCharacterCreated( Character c ) {
@@ -59,7 +44,7 @@ public class CharacterSpriteController : MonoBehaviour {
 		char_go.transform.SetParent(this.transform, true);
 
 		SpriteRenderer sr = char_go.AddComponent<SpriteRenderer>();
-		sr.sprite = characterSprites["p1_front"];
+		sr.sprite = SpriteManager.current.GetSprite("Character", "p1_front");
 		sr.sortingLayerName = "Characters";
 
 		// Register our callback so that our GameObject gets updated whenever

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Sprites>
+	<Sprite name="furn_SteelWall_"     x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_E"    x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_ES"   x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_ESW"  x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_EW"   x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_N"    x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_NE"   x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_NES"  x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_NESW" x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_NEW"  x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_NS"   x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_NSW"  x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_NW"   x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_S"    x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_SW"   x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+	<Sprite name="furn_SteelWall_W"    x="0" y="224" w="32" h="32" pixelPerUnit="32" />
+</Sprites>

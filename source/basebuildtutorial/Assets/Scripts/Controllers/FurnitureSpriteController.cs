@@ -12,16 +12,12 @@ public class FurnitureSpriteController : MonoBehaviour {
 
 	Dictionary<Furniture, GameObject> furnitureGameObjectMap;
 
-	Dictionary<string, Sprite> furnitureSprites;
-
 	World world {
 		get { return WorldController.Instance.world; }
 	}
 
 	// Use this for initialization
 	void Start () {
-		LoadSprites();
-
 		// Instantiate our dictionary that tracks which GameObject is rendering which Tile data.
 		furnitureGameObjectMap = new Dictionary<Furniture, GameObject>();
 
@@ -32,17 +28,6 @@ public class FurnitureSpriteController : MonoBehaviour {
 		// Go through any EXISTING furniture (i.e. from a save that was loaded OnEnable) and call the OnCreated event manually
 		foreach(Furniture furn in world.furnitures) {
 			OnFurnitureCreated(furn);
-		}
-	}
-
-	void LoadSprites() {
-		furnitureSprites = new Dictionary<string, Sprite>();
-		Sprite[] sprites = Resources.LoadAll<Sprite>("Images/Furniture/");
-
-		//Debug.Log("LOADED RESOURCE:");
-		foreach(Sprite s in sprites) {
-			//Debug.Log(s);
-			furnitureSprites[s.name] = s;
 		}
 	}
 
@@ -150,12 +135,13 @@ public class FurnitureSpriteController : MonoBehaviour {
 				//Debug.Log(spriteName);
 			}
 
-			if(furnitureSprites.ContainsKey(spriteName) == false) {
+			/*if(furnitureSprites.ContainsKey(spriteName) == false) {
 				Debug.Log("furnitureSprites has no definition for: " + spriteName);
 				return null;
 			}
+*/
 
-			return furnitureSprites[spriteName];
+			return SpriteManager.current.GetSprite( "Furniture", spriteName); // furnitureSprites[spriteName];
 		}
 
 		// Otherwise, the sprite name is more complicated.
@@ -190,27 +176,24 @@ public class FurnitureSpriteController : MonoBehaviour {
 		// the same type, then the string will look like:
 		//       Wall_NESW
 
-		if(furnitureSprites.ContainsKey(spriteName) == false) {
+/*		if(furnitureSprites.ContainsKey(spriteName) == false) {
 			Debug.LogError("GetSpriteForInstalledObject -- No sprites with name: " + spriteName);
 			return null;
 		}
+*/
 
-
-		return furnitureSprites[spriteName];
+		return SpriteManager.current.GetSprite("Furniture", spriteName); //furnitureSprites[spriteName];
 
 	}
 
 
 	public Sprite GetSpriteForFurniture(string objectType) {
-		if(furnitureSprites.ContainsKey(objectType)) {
-			return furnitureSprites[objectType];
+		Sprite s = SpriteManager.current.GetSprite("Furniture", objectType);
+
+		if(s == null) {
+			s = SpriteManager.current.GetSprite("Furniture", objectType + "_");
 		}
 
-		if(furnitureSprites.ContainsKey(objectType+"_")) {
-			return furnitureSprites[objectType+"_"];
-		}
-
-		Debug.LogError("GetSpriteForFurniture -- No sprites with name: " + objectType);
-		return null;
+		return s;
 	}
 }
