@@ -4,7 +4,7 @@
 //=======================================================================
 
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 using System.Xml;
 using System.Xml.Schema;
@@ -40,6 +40,8 @@ public class Tile :IXmlSerializable {
 	public Inventory inventory;
 
 	public Room room;
+
+	public List<Character> characters;
 
 	// Furniture is something like a wall, door, or sofa.
 	public Furniture furniture {
@@ -82,6 +84,7 @@ public class Tile :IXmlSerializable {
 	public Tile( int x, int y ) {
 		this.X = x;
 		this.Y = y;
+		characters = new List<Character>();
 	}
 
 	/// <summary>

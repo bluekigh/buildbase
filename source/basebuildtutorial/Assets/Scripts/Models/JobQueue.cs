@@ -17,7 +17,7 @@ public class JobQueue {
 	}
 
 	public void Enqueue(Job j) {
-		Debug.Log("Adding job to queue. Existing queue size: " + jobQueue.Count);
+		//Debug.Log("Adding job to queue. Existing queue size: " + jobQueue.Count);
 		if(j.jobTime < 0) {
 			// Job has a negative job time, so it's not actually
 			// supposed to be queued up.  Just insta-complete it.

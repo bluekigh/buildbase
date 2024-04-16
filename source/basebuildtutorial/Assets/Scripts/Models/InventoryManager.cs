@@ -129,7 +129,7 @@ public class InventoryManager {
 
 	public Path_AStar GetPathToClosestInventoryOfType(string objectType, Tile t, int desiredAmount, bool canTakeFromStockpile) { 
 		if ( inventories.ContainsKey(objectType) == false ) {
-			Debug.LogError("GetClosestInventoryOfType -- no items of desired type.");
+			//Debug.LogError("GetClosestInventoryOfType -- no items of desired type.");
 			return null;
 		}
 

@@ -10,11 +10,6 @@ using System.Collections.Generic;
 
 public class TileSpriteController : MonoBehaviour {
 
-	// The only tile sprite we have right now, so this
-	// it a pretty simple way to handle it.
-	public Sprite floorSprite;	// FIXME!
-	public Sprite emptySprite;	// FIXME!
-
 	Dictionary<Tile, GameObject> tileGameObjectMap;
 
 	World world {
@@ -45,7 +40,7 @@ public class TileSpriteController : MonoBehaviour {
 				// Add a Sprite Renderer
 				// Add a default sprite for empty tiles.
 				SpriteRenderer sr = tile_go.AddComponent<SpriteRenderer>();
-				sr.sprite = emptySprite;
+				sr.sprite = SpriteManager.current.GetSprite("Tile", "Empty");
 				sr.sortingLayerName = "Tiles";
 
 				OnTileChanged(tile_data);
@@ -96,10 +91,10 @@ public class TileSpriteController : MonoBehaviour {
 		}
 
 		if(tile_data.Type == TileType.Floor) {
-			tile_go.GetComponent<SpriteRenderer>().sprite = floorSprite;
+			tile_go.GetComponent<SpriteRenderer>().sprite = SpriteManager.current.GetSprite("Tile", "Floor");
 		}
 		else if( tile_data.Type == TileType.Empty ) {
-			tile_go.GetComponent<SpriteRenderer>().sprite = emptySprite;
+			tile_go.GetComponent<SpriteRenderer>().sprite = SpriteManager.current.GetSprite("Tile", "Empty");
 		}
 		else {
 			Debug.LogError("OnTileTypeChanged - Unrecognized tile type.");
