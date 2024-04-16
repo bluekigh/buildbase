@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 using System.IO;
 
 
-public class FileSaveController : DialogBoxController {
+public class FileLoadController : DialogBoxController {
 
 	public GameObject fileListItemPrefab;
 	public Transform fileList;
@@ -73,10 +73,6 @@ public class FileSaveController : DialogBoxController {
 	}
 
 	public void OkayWasClicked() {
-		// TODO:
-		// check to see if the file already exists
-		// if so, ask for overwrite confirmation.
-
 		string fileName = gameObject.GetComponentInChildren<InputField>().text;
 
 		// TODO: Is the filename valid?  I.E. we may want to ban path-delimiters (/ \ or :) and 
@@ -94,46 +90,29 @@ public class FileSaveController : DialogBoxController {
 		// At this point, filePath should look very much like
 		//     C:\Users\Quill18\ApplicationData\MyCompanyName\MyGameName\Saves\SaveGameName123.sav
 
-		if(File.Exists(filePath) == true) {
+		if(File.Exists(filePath) == false) {
 			// TODO: Do file overwrite dialog box.
 
-			Debug.LogError("File already exists -- overwriting the file for now.");
-
+			Debug.LogError("File doesn't exist.  What?");
+			CloseDialog();
+			return;
 		}
 
 		CloseDialog();
 
-		SaveWorld(filePath);
+		LoadWorld(filePath);
 	}
 
-	public void SaveWorld(string filePath) {
+	public void LoadWorld(string filePath) {
 		// This function gets called when the user confirms a filename
-		// from the save dialog box.
+		// from the load dialog box.
 
 		// Get the file name from the save file dialog box
 
-		Debug.Log("SaveWorld button was clicked.");
+		Debug.Log("LoadWorld button was clicked.");
 
-		XmlSerializer serializer = new XmlSerializer( typeof(World) );
-		TextWriter writer = new StringWriter();
-		serializer.Serialize(writer, WorldController.Instance.world);
-		writer.Close();
+		WorldController.Instance.LoadWorld( filePath );
 
-		Debug.Log( writer.ToString() );
 
-		//PlayerPrefs.SetString("SaveGame00", writer.ToString());
-
-		// Create/overwrite the save file with the xml text.
-
-		// Make sure the save folder exists.
-		if( Directory.Exists( WorldController.Instance.FileSaveBasePath() ) == false ) {
-			// NOTE: This can throw an exception if we can't create the folder,
-			// but why would this ever happen? We should, by definition, have the ability
-			// to write to our persistent data folder unless something is REALLY broken
-			// with the computer/device we're running on.
-			Directory.CreateDirectory( WorldController.Instance.FileSaveBasePath() );
-		}
-
-		File.WriteAllText( filePath, writer.ToString() );
-
-	}}
+	}
+}
